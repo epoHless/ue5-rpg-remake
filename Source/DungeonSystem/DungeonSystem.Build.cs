@@ -10,6 +10,8 @@ public class DungeonSystem : ModuleRules
             new string[]
             {
                 "Core",
+                "Paper2D",
+                "EntitySystem"
             }
         );
 

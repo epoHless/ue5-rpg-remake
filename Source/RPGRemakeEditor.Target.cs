@@ -16,6 +16,6 @@ public class RPGRemakeEditorTarget : TargetRules
 
 	private void RegisterModulesCreatedByRider()
 	{
-		ExtraModuleNames.AddRange(new string[] { "DungeonSystem" });
+		ExtraModuleNames.AddRange(new string[] { "DungeonSystem", "EntitySystem" });
 	}
 }
