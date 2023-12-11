@@ -8,6 +8,9 @@ struct DUNGEONSYSTEM_API FRoomTemplate : public FTableRowBase
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System", meta = (UIMin = "0.0", UIMax = "1.0"))
+	float Probability;
+
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	UPaperTileMap* TileMap;
 

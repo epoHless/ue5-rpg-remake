@@ -1,21 +1,27 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "PaperCharacter.h"
-#include "Interfaces/Spawnable.h"
+#include "Entities/Entity.h"
+#include "PlayerEntity.generated.h"
 
-#include "EntityCharacter.generated.h"
+class UPaperFlipbook;
 
-UCLASS(Blueprintable, BlueprintType)
-class ENTITYSYSTEM_API AEntityCharacter : public APaperCharacter, public ISpawnable
+UCLASS()
+class ENTITYSYSTEM_API APlayerEntity : public AEntity
 {
 	GENERATED_BODY()
 
 public:
-	AEntityCharacter();
+	APlayerEntity();
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	UPaperFlipbook* IdleFlipbook;
+	
+	UPROPERTY()
+	UPaperFlipbook* RunFlipbook;
 
 public:
 	virtual void Tick(float DeltaTime) override;
