@@ -3,6 +3,7 @@
 #include "Entities/Entity.h"
 #include "Entities/Implementations/EnemyEntity.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 void UAttackState::OnEnter_Implementation(AEntity* Entity)
 {
@@ -26,22 +27,26 @@ void UAttackState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameM
 		
 		if(CurrentTime >= AttackRate)
 		{
-			FVector TraceStart = Entity->GetActorLocation();
-			FVector TraceDirection = (PlayerPawn->GetActorLocation() - TraceStart).GetSafeNormal();
-			FVector TraceEnd = TraceStart + (TraceDirection * Range);
-
-			FHitResult Result;
-
-			if (GameMode->GetWorld()->LineTraceSingleByChannel(OUT Result, TraceStart, TraceEnd, ECC_Camera))
-			{
-				if(Result.GetActor()->GetClass()->ImplementsInterface(UDamageable::StaticClass()))
-				{
-					IDamageable::Execute_TakeDamage(Result.GetActor(), Damage);
-					UE_LOG(LogTemp, Display, TEXT("Attacking!"));
-				}
-			}
-
+			Attack(Entity, GameMode);
 			CurrentTime = 0;
+		}
+	}
+}
+
+void UAttackState::Attack(AEntity* Entity, AGameModeBase* GameMode)
+{
+	FVector TraceStart = Entity->GetActorLocation();
+	FVector TraceDirection = (PlayerPawn->GetActorLocation() - TraceStart).GetSafeNormal();
+	FVector TraceEnd = TraceStart + (TraceDirection * Range);
+
+	FHitResult Result;
+
+	if (GameMode->GetWorld()->LineTraceSingleByChannel(OUT Result, TraceStart + (TraceDirection * 10), TraceEnd, ECC_Camera))
+	{
+		if(Result.GetActor()->GetClass()->ImplementsInterface(UDamageable::StaticClass()))
+		{
+			IDamageable::Execute_TakeDamage(Result.GetActor(), Damage);
+			UE_LOG(LogTemp, Display, TEXT("Attacking!"));
 		}
 	}
 }
