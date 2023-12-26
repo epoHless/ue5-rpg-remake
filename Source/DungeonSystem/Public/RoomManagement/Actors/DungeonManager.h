@@ -31,8 +31,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	TArray<URoomTemplate*> Templates;
 
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	TArray<FRoomInstance> Rooms;
+	FRoomInstance Rooms[10][10];
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	FRoomInstance CurrentRoom;
@@ -47,10 +46,10 @@ private:
 	int32 YSize;
 
 	UFUNCTION()
-	void OnOverlap(FVector2D Direction);
+	void OnOverlap(FIntVector Direction);
 	
 	void InitDungeon();
-	void ChangeRoom(FVector2D Direction);
+	void ChangeRoom(FIntVector Direction);
 
 protected:
 	virtual void BeginPlay() override;

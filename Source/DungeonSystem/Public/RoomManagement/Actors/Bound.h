@@ -4,7 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Bound.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCollisionCallback, FVector2D, Direction);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCollisionCallback, FIntVector, Direction);
 
 class UBoxComponent;
 
@@ -30,7 +30,7 @@ protected:
 private:
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	FVector2D Direction;
+	FIntVector Direction;
 	
 public:
 	virtual void Tick(float DeltaTime) override;
