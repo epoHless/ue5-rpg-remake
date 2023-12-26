@@ -1,0 +1,29 @@
+﻿#pragma once
+
+#include "CoreMinimal.h"
+#include "MovementState.h"
+#include "EnemyMovementState.generated.h"
+
+UCLASS()
+class ENTITYSYSTEM_API UEnemyMovementState : public UMovementState
+{
+public:
+	virtual void OnEnter_Implementation(AEntity* Entity) override;
+	virtual void OnExit_Implementation(AEntity* Entity) override;
+	virtual void OnUpdate_Implementation(AEntity* Entity) override;
+
+private:
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
+	float MovementSpeed = 50;
+	
+	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
+	float AttackRange = 100;
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
+	float PatrolRange = 200;
+
+	UPROPERTY()
+	APawn* PlayerPawn = nullptr;
+};
