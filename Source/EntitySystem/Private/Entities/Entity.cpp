@@ -4,6 +4,19 @@
 #include "Components/CapsuleComponent.h"
 #include "Entities/State Management/BaseState.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+
+void AEntity::TakeDamage_Implementation(float Damage)
+{
+	CurrentHealth -= Damage;
+
+	OnDamageTaken.Broadcast(CurrentHealth/EntityDataAsset->Health);
+	
+	if(CurrentHealth <= 0)
+	{
+		OnDeath_Implementation();
+	}
+}
 
 AEntity::AEntity()
 {
@@ -23,7 +36,7 @@ void AEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	CurrentState->OnUpdate(this);
+	CurrentState->OnUpdate(this, UGameplayStatics::GetGameMode(this));
 }
 
 void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)
@@ -35,6 +48,7 @@ void AEntity::SetupEntity()
 {
 	if(EntityDataAsset->FlipbookDataAsset != nullptr)
 	{
+		CurrentHealth = EntityDataAsset->Health;
 		SetFlipbook(EntityDataAsset->FlipbookDataAsset->IdleFlipbook);
 		ChangeState(EntityDataAsset->IdleState);
 	}

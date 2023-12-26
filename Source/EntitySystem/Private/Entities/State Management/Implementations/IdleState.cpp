@@ -12,7 +12,7 @@ void UIdleState::OnExit_Implementation(AEntity* Entity)
 {
 }
 
-void UIdleState::OnUpdate_Implementation(AEntity* Entity)
+void UIdleState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameMode)
 {
 	if (Entity->GetMovementComponent()->Velocity != FVector::ZeroVector)
 	{

@@ -4,6 +4,7 @@
 #include "PaperCharacter.h"
 #include "Data/EntityDataAsset.h"
 #include "Data/FlipbookDataAsset.h"
+#include "Interfaces/Damageable.h"
 
 #include "Entity.generated.h"
 
@@ -11,9 +12,21 @@ class UEntityDataAsset;
 class UBaseState;
 class UPaperFlipbook;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHealthCallback, float, Percentage);
+
 UCLASS(Abstract, Blueprintable, BlueprintType)
-class ENTITYSYSTEM_API AEntity : public APaperCharacter
+class ENTITYSYSTEM_API AEntity : public APaperCharacter, public IDamageable
 {
+public:
+	virtual void TakeDamage_Implementation(float Damage) override;
+
+	UPROPERTY(BlueprintAssignable)
+	FHealthCallback OnDamageTaken;
+	
+	UPROPERTY(EditAnywhere, Category = "RPG|Entity|Health")
+	float CurrentHealth;
+
+private:
 	GENERATED_BODY()
 
 public:

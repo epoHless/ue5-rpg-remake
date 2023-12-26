@@ -15,16 +15,12 @@ void AEntityController::SetupInputComponent()
 void AEntityController::HorizontalMovement(float Value)
 {
 	HorizontalValue = Value;
-	
-	UE_LOG(LogTemp, Warning, TEXT("horizontal value is: %f"), Value);
 	Cast<APlayerEntity>(GetPawn())->GetSprite()->SetRelativeRotation(Value >= 0 ? FRotator(0,0,-90) : FRotator(180,0,-90));
 }
 
 void AEntityController::VerticalMovement(float Value)
 {
 	VerticalValue = Value;
-	
-	UE_LOG(LogTemp, Warning, TEXT("vertical value is: %f"), Value);
 }
 
 AEntityController::AEntityController()

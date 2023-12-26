@@ -11,7 +11,7 @@ void UMovementState::OnExit_Implementation(AEntity* Entity)
 {
 }
 
-void UMovementState::OnUpdate_Implementation(AEntity* Entity)
+void UMovementState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameMode)
 {
 	if (Entity->GetMovementComponent()->Velocity == FVector::ZeroVector)
 	{

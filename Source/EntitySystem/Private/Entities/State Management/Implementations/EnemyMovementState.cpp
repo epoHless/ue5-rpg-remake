@@ -15,7 +15,7 @@ void UEnemyMovementState::OnExit_Implementation(AEntity* Entity)
 	Super::OnExit_Implementation(Entity);
 }
 
-void UEnemyMovementState::OnUpdate_Implementation(AEntity* Entity)
+void UEnemyMovementState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameMode)
 {
 	if (FVector::Distance(Entity->GetActorLocation(), PlayerPawn->GetActorLocation()) > PatrolRange)
 	{
@@ -33,5 +33,5 @@ void UEnemyMovementState::OnUpdate_Implementation(AEntity* Entity)
 		}
 	}
 	
-	Super::OnUpdate_Implementation(Entity);
+	Super::OnUpdate_Implementation(Entity, GameMode);
 }

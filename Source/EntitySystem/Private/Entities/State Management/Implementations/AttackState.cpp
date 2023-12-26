@@ -2,6 +2,7 @@
 
 #include "Entities/Entity.h"
 #include "Entities/Implementations/EnemyEntity.h"
+#include "GameFramework/GameModeBase.h"
 
 void UAttackState::OnEnter_Implementation(AEntity* Entity)
 {
@@ -14,11 +15,33 @@ void UAttackState::OnExit_Implementation(AEntity* Entity)
 	Super::OnExit_Implementation(Entity);
 }
 
-void UAttackState::OnUpdate_Implementation(AEntity* Entity)
+void UAttackState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameMode)
 {
 	if (FVector::Distance(Entity->GetActorLocation(), PlayerPawn->GetActorLocation()) > Range)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Can Attack!"));
 		Entity->ChangeState(Entity->EntityDataAsset->MovementState);
+	}else
+	{
+		CurrentTime += GameMode->GetWorld()->DeltaTimeSeconds;
+		
+		if(CurrentTime >= AttackRate)
+		{
+			FVector TraceStart = Entity->GetActorLocation();
+			FVector TraceDirection = (PlayerPawn->GetActorLocation() - TraceStart).GetSafeNormal();
+			FVector TraceEnd = TraceStart + (TraceDirection * Range);
+
+			FHitResult Result;
+
+			if (GameMode->GetWorld()->LineTraceSingleByChannel(OUT Result, TraceStart, TraceEnd, ECC_Camera))
+			{
+				if(Result.GetActor()->GetClass()->ImplementsInterface(UDamageable::StaticClass()))
+				{
+					IDamageable::Execute_TakeDamage(Result.GetActor(), Damage);
+					UE_LOG(LogTemp, Display, TEXT("Attacking!"));
+				}
+			}
+
+			CurrentTime = 0;
+		}
 	}
 }

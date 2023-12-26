@@ -16,7 +16,7 @@ public:
 	void OnEnter(AEntity* Entity);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Entities")
-	void OnUpdate(AEntity* Entity);
+	void OnUpdate(AEntity* Entity, AGameModeBase* GameMode);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Entities")
 	void OnExit(AEntity* Entity);

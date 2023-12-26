@@ -12,6 +12,10 @@ class ENTITYSYSTEM_API UEntityDataAsset : public UDataAsset
 {
 	GENERATED_BODY()
 public:
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Entity|Health")
+	float Health;
+	
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
 	UFlipbookDataAsset* FlipbookDataAsset;
 	
