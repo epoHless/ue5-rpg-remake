@@ -2,10 +2,7 @@
 
 #include "PaperFlipbookComponent.h"
 #include "Components/CapsuleComponent.h"
-
 #include "Entities/State Management/BaseState.h"
-#include "Entities/State Management/Implementations/IdleState.h"
-
 #include "GameFramework/CharacterMovementComponent.h"
 
 AEntity::AEntity()

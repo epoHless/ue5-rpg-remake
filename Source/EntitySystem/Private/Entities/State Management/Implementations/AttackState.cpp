@@ -1,9 +1,11 @@
 ﻿#include "Entities/State Management/Implementations/AttackState.h"
 
 #include "Entities/Entity.h"
+#include "Entities/Implementations/EnemyEntity.h"
 
 void UAttackState::OnEnter_Implementation(AEntity* Entity)
 {
+	if(PlayerPawn == nullptr) PlayerPawn = Cast<AEnemyEntity>(Entity)->GetPawn();
 	Super::OnEnter_Implementation(Entity);
 }
 

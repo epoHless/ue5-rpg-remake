@@ -1,14 +1,12 @@
 ﻿#include "Entities/State Management/Implementations/EnemyMovementState.h"
 
 #include "Entities/Entity.h"
+#include "Entities/Implementations/EnemyEntity.h"
 #include "GameFramework/PawnMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
 
 void UEnemyMovementState::OnEnter_Implementation(AEntity* Entity)
 {
-	if(PlayerPawn == nullptr)
-		PlayerPawn = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetPawn();
-	
+	if(PlayerPawn == nullptr) PlayerPawn = Cast<AEnemyEntity>(Entity)->GetPawn();
 	Super::OnEnter_Implementation(Entity);
 }
 

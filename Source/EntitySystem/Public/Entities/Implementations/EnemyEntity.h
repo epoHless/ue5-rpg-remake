@@ -18,6 +18,10 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	FORCEINLINE APawn* GetPawn() const { return PlayerPawn; }
+
+private:
+	UPROPERTY()
+	APawn* PlayerPawn = nullptr;
 };

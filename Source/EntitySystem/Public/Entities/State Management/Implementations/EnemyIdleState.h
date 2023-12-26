@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Entities/State Management/BaseState.h"
-#include "AttackState.generated.h"
+#include "IdleState.h"
+#include "EnemyIdleState.generated.h"
 
 UCLASS()
-class ENTITYSYSTEM_API UAttackState : public UBaseState
+class ENTITYSYSTEM_API UEnemyIdleState : public UIdleState
 {
 public:
 	virtual void OnEnter_Implementation(AEntity* Entity) override;
@@ -15,9 +15,9 @@ public:
 private:
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	float Range;
+	UPROPERTY(EditAnywhere)
+	float ToMovementRange = 100;
 
 	UPROPERTY()
-	APawn* PlayerPawn;
+	APawn* PlayerPawn = nullptr;
 };
