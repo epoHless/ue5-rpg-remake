@@ -2,10 +2,12 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "Data/EntityDataAsset.h"
 #include "Data/FlipbookDataAsset.h"
 
 #include "Entity.generated.h"
 
+class UEntityDataAsset;
 class UBaseState;
 class UPaperFlipbook;
 
@@ -20,9 +22,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	UFlipbookDataAsset* FlipbookDataAsset;
-
 	void SetupEntity();
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity")
@@ -32,18 +31,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	TSubclassOf<UBaseState> IdleState;
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	TSubclassOf<UBaseState> MovementState;
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	TSubclassOf<UBaseState> AttackState;
+	UEntityDataAsset* EntityDataAsset;
 	
 	void SetFlipbook(UPaperFlipbook* Flipbook);
 
-	FORCEINLINE UPaperFlipbook* GetIdleFlipbook() const { return FlipbookDataAsset->IdleFlipbook; } 
-	FORCEINLINE UPaperFlipbook* GetRunFlipbook() const { return FlipbookDataAsset->RunFlipbook; }
+	FORCEINLINE UPaperFlipbook* GetIdleFlipbook() const { return EntityDataAsset->FlipbookDataAsset->IdleFlipbook; } 
+	FORCEINLINE UPaperFlipbook* GetRunFlipbook() const { return EntityDataAsset->FlipbookDataAsset->RunFlipbook; }
 
-	void ChangeState(TSubclassOf<UBaseState> State);
+	void ChangeState(UBaseState* State);
 };

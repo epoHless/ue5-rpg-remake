@@ -1,26 +1,16 @@
 ﻿#include "Entities/Implementations/EnemyEntity.h"
 
-#include "Entities/State Management/Implementations/AttackState.h"
-#include "Entities/State Management/Implementations/EnemyMovementState.h"
-#include "Entities/State Management/Implementations/IdleState.h"
-
 AEnemyEntity::AEnemyEntity()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	IdleState = UIdleState::StaticClass();
-	MovementState = UEnemyMovementState::StaticClass();
-	AttackState = UAttackState::StaticClass();
 }
 
 void AEnemyEntity::BeginPlay()
-{
-	if (CurrentState == nullptr)
-	{
-		CurrentState = NewObject<UIdleState>();
-	}
-	
-	Super::BeginPlay();	
+{	
+	Super::BeginPlay();
+
+	const FVector Location = GetActorLocation();
+	SetActorLocation(FVector(Location.X, Location.Y, 15));
 }
 
 void AEnemyEntity::Tick(float DeltaTime)

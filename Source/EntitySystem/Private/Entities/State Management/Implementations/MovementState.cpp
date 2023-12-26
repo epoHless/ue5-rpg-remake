@@ -15,6 +15,6 @@ void UMovementState::OnUpdate_Implementation(AEntity* Entity)
 {
 	if (Entity->GetMovementComponent()->Velocity == FVector::ZeroVector)
 	{
-		Entity->ChangeState(Entity->IdleState);	
+		Entity->ChangeState(Entity->EntityDataAsset->IdleState);	
 	}	
 }

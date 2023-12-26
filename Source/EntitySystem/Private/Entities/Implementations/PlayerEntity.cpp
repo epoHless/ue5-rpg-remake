@@ -1,17 +1,13 @@
 ﻿#include "Entities/Implementations/PlayerEntity.h"
 
-#include "Entities/State Management/Implementations/IdleState.h"
-#include "Entities/State Management/Implementations/MovementState.h"
-
 APlayerEntity::APlayerEntity()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	IdleState = UIdleState::StaticClass();
-	MovementState = UMovementState::StaticClass();
+	const auto DataObjectFinder = ConstructorHelpers::FObjectFinder<UEntityDataAsset>(TEXT("/Script/EntitySystem.EntityDataAsset'/Game/Core/Data/Player/PlayerData.PlayerData'"));
+	EntityDataAsset = DataObjectFinder.Object;
 
-	const auto IdleObjectFinder = ConstructorHelpers::FObjectFinder<UFlipbookDataAsset>(TEXT("/Game/Core/Sprites/Characters/DA_PlayerFB.DA_PlayerFB"));
-	FlipbookDataAsset = IdleObjectFinder.Object;
+	SetupEntity();
 }
 
 void APlayerEntity::BeginPlay()

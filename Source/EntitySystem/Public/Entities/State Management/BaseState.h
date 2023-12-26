@@ -7,7 +7,7 @@
 class AEntity;
 
 UCLASS(Abstract, Blueprintable, BlueprintType)
-class ENTITYSYSTEM_API UBaseState : public UObject
+class ENTITYSYSTEM_API UBaseState : public UDataAsset
 {
 	GENERATED_BODY()
 

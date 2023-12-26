@@ -11,11 +11,6 @@
 AEntity::AEntity()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	
-	if (CurrentState == nullptr)
-	{
-		CurrentState = NewObject<UIdleState>();
-	}
 }
 
 void AEntity::BeginPlay()
@@ -41,9 +36,12 @@ void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)
 
 void AEntity::SetupEntity()
 {
-	if(FlipbookDataAsset != nullptr)
-		SetFlipbook(FlipbookDataAsset->IdleFlipbook);
-	
+	if(EntityDataAsset->FlipbookDataAsset != nullptr)
+	{
+		SetFlipbook(EntityDataAsset->FlipbookDataAsset->IdleFlipbook);
+		ChangeState(EntityDataAsset->IdleState);
+	}
+
 	GetSprite()->SetRelativeRotation(FRotator(0,0,-90));
 
 	GetCapsuleComponent()->SetCapsuleRadius(5);
@@ -52,9 +50,9 @@ void AEntity::SetupEntity()
 	GetCharacterMovement()->GravityScale = 0;
 }
 
-void AEntity::ChangeState(TSubclassOf<UBaseState> State)
+void AEntity::ChangeState(UBaseState* State)
 {
-	CurrentState->OnExit(this);
-	CurrentState = State.GetDefaultObject();
+	if(CurrentState != nullptr) CurrentState->OnExit(this);
+	CurrentState = State;
 	CurrentState->OnEnter(this);
 }

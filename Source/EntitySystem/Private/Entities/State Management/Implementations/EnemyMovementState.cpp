@@ -21,7 +21,7 @@ void UEnemyMovementState::OnUpdate_Implementation(AEntity* Entity)
 {
 	if (FVector::Distance(Entity->GetActorLocation(), PlayerPawn->GetActorLocation()) > PatrolRange)
 	{
-		Entity->ChangeState(Entity->IdleState);
+		Entity->ChangeState(Entity->EntityDataAsset->IdleState);
 	}
 	else
 	{
@@ -31,7 +31,7 @@ void UEnemyMovementState::OnUpdate_Implementation(AEntity* Entity)
 		if (FVector::Distance(Entity->GetActorLocation(), PlayerPawn->GetActorLocation()) < AttackRange)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Can Attack!"));
-			Entity->ChangeState(Entity->AttackState);
+			Entity->ChangeState(Entity->EntityDataAsset->AttackState);
 		}
 	}
 	

@@ -16,6 +16,6 @@ void UIdleState::OnUpdate_Implementation(AEntity* Entity)
 {
 	if (Entity->GetMovementComponent()->Velocity != FVector::ZeroVector)
 	{
-		Entity->ChangeState(Entity->MovementState);	
+		Entity->ChangeState(Entity->EntityDataAsset->MovementState);	
 	}	
 }

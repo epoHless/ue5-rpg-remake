@@ -17,6 +17,6 @@ void UAttackState::OnUpdate_Implementation(AEntity* Entity)
 	if (FVector::Distance(Entity->GetActorLocation(), PlayerPawn->GetActorLocation()) > Range)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Can Attack!"));
-		Entity->ChangeState(Entity->MovementState);
+		Entity->ChangeState(Entity->EntityDataAsset->MovementState);
 	}
 }
