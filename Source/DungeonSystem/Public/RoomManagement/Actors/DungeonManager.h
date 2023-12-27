@@ -4,11 +4,7 @@
 #include "Bound.h"
 #include "GameFramework/Actor.h"
 #include "RoomManagement/Data/RoomInstance.h"
-#include "RoomManagement/Data/RoomTemplate.h"
 #include "DungeonManager.generated.h"
-
-class URoomTemplate;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonCallback, FRoomInstance, Room);
 
 class APaperTileMapActor;
 
@@ -20,38 +16,18 @@ class DUNGEONSYSTEM_API ADungeonManager : public AActor
 public:
 	ADungeonManager();
 
-	UPROPERTY(BlueprintAssignable)
-	FDungeonCallback OnRoomChanged;
-
 private:
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	TArray<ABound*> Bounds;
-	
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	TArray<URoomTemplate*> Templates;
-
-	FRoomInstance Rooms[10][10];
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	FRoomInstance CurrentRoom;
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	APaperTileMapActor* TilemapActor;
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	int32 XSize;
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	int32 YSize;
-
-	UFUNCTION()
-	void OnOverlap(FIntVector Direction);
-	
-	void InitDungeon();
-	void ChangeRoom(FIntVector Direction);
+	TArray<ABound*> Bounds;
 
 protected:
+	UFUNCTION()
+	void ChangeTileset(const FRoomInstance& Room);
+	
 	virtual void BeginPlay() override;
 
 public:

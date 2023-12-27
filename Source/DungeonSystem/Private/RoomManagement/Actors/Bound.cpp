@@ -2,6 +2,9 @@
 
 #include "Components/BoxComponent.h"
 #include "Entities/Implementations/PlayerEntity.h"
+#include "FunctionLibraries/ExtensionLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Subsystems/RoomSubsystem.h"
 
 ABound::ABound()
 {
@@ -19,14 +22,14 @@ void ABound::OnCollision(UPrimitiveComponent* OverlappedComponent, AActor* Other
 
 	if (Player)
 	{
-		OnPlayerOverlap.Broadcast(Direction);
+		const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
+		RoomSubsystem->OnBoundHit.Broadcast(Direction);
 	}
 }
 
 void ABound::BeginPlay()
 {
 	Super::BeginPlay();
-
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ABound::OnCollision);
 }
 
