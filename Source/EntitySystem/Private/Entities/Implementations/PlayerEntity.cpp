@@ -1,13 +1,14 @@
 ﻿#include "Entities/Implementations/PlayerEntity.h"
 
 APlayerEntity::APlayerEntity()
-{
+{	
 	PrimaryActorTick.bCanEverTick = true;
 
 	const auto DataObjectFinder = ConstructorHelpers::FObjectFinder<UEntityDataAsset>(TEXT("/Script/EntitySystem.EntityDataAsset'/Game/Core/Data/Player/PlayerData.PlayerData'"));
 	EntityDataAsset = DataObjectFinder.Object;
 
-	SetupEntity();
+	SetupEntity(EntityDataAsset);
+	SetupComponents();
 }
 
 void APlayerEntity::BeginPlay()

@@ -18,38 +18,39 @@ UCLASS(Abstract, Blueprintable, BlueprintType)
 class ENTITYSYSTEM_API AEntity : public APaperCharacter, public IDamageable
 {
 public:
+
+	AEntity();
+	
 	virtual void TakeDamage_Implementation(float Damage) override;
 
 	UPROPERTY(BlueprintAssignable)
-	FHealthCallback OnDamageTaken;
+	FHealthCallback OnHealthChanged;
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
+	UEntityDataAsset* EntityDataAsset;
+
+	void SetFlipbook(UPaperFlipbook* Flipbook);
+
+	FORCEINLINE UPaperFlipbook* GetIdleFlipbook() const { return EntityDataAsset->FlipbookDataAsset->IdleFlipbook; }
+	FORCEINLINE UPaperFlipbook* GetRunFlipbook() const { return EntityDataAsset->FlipbookDataAsset->RunFlipbook; }
+
+	void ChangeState(UBaseState* State);
 	
-	UPROPERTY(EditAnywhere, Category = "RPG|Entity|Health")
+	virtual void Tick(float DeltaTime) override;
+
+protected:
+	
+	virtual void BeginPlay() override;
+
+	void SetupEntity(const UEntityDataAsset* Data);
+	void SetupComponents();
+
+	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity")
+	UBaseState* CurrentState;
+
+	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity|Health")
 	float CurrentHealth;
 
 private:
 	GENERATED_BODY()
-
-public:
-	AEntity();
-
-protected:
-	virtual void BeginPlay() override;
-
-	void SetupEntity();
-
-	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity")
-	UBaseState* CurrentState;
-	
-public:
-	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	UEntityDataAsset* EntityDataAsset;
-	
-	void SetFlipbook(UPaperFlipbook* Flipbook);
-
-	FORCEINLINE UPaperFlipbook* GetIdleFlipbook() const { return EntityDataAsset->FlipbookDataAsset->IdleFlipbook; } 
-	FORCEINLINE UPaperFlipbook* GetRunFlipbook() const { return EntityDataAsset->FlipbookDataAsset->RunFlipbook; }
-
-	void ChangeState(UBaseState* State);
 };

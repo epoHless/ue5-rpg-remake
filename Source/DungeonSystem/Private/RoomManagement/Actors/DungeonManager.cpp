@@ -8,7 +8,7 @@
 
 ADungeonManager::ADungeonManager()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 }
 
 void ADungeonManager::BeginPlay()
@@ -17,11 +17,6 @@ void ADungeonManager::BeginPlay()
 
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
 	RoomSubsystem->OnRoomChanged.AddDynamic(this, &ADungeonManager::ChangeTileset);
-}
-
-void ADungeonManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void ADungeonManager::ChangeTileset(const FRoomInstance& Room)

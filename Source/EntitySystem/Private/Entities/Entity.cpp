@@ -10,8 +10,7 @@ void AEntity::TakeDamage_Implementation(float Damage)
 {
 	CurrentHealth -= Damage;
 
-	OnDamageTaken.Broadcast(CurrentHealth/EntityDataAsset->Health);
-	UE_LOG(LogTemp, Warning, TEXT("%f"), CurrentHealth);
+	OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
 	
 	if(CurrentHealth <= 0)
 	{
@@ -19,25 +18,31 @@ void AEntity::TakeDamage_Implementation(float Damage)
 	}
 }
 
+void AEntity::SetupComponents()
+{
+	GetSprite()->SetRelativeRotation(FRotator(0,0,-90));
+
+	GetCapsuleComponent()->SetCapsuleRadius(5);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(10);
+
+	GetCharacterMovement()->GravityScale = 0;
+}
+
 AEntity::AEntity()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	SetupComponents();
 }
 
 void AEntity::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SetupEntity();
-	
-	CurrentState->OnEnter(this);
 }
 
 void AEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	CurrentState->OnUpdate(this, UGameplayStatics::GetGameMode(this));
+	if(CurrentState != nullptr) CurrentState->OnUpdate(this, UGameplayStatics::GetGameMode(this));
 }
 
 void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)
@@ -45,21 +50,19 @@ void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)
 	GetSprite()->SetFlipbook(Flipbook);
 }
 
-void AEntity::SetupEntity()
+void AEntity::SetupEntity(const UEntityDataAsset* Data)
 {
-	if(EntityDataAsset->FlipbookDataAsset != nullptr)
+	if(Data->FlipbookDataAsset != nullptr)
 	{
-		CurrentHealth = EntityDataAsset->Health;
-		SetFlipbook(EntityDataAsset->FlipbookDataAsset->IdleFlipbook);
-		ChangeState(EntityDataAsset->IdleState);
+		CurrentHealth = Data->Health;
+		SetFlipbook(Data->FlipbookDataAsset->IdleFlipbook);
+		ChangeState(Data->IdleState);
 	}
 
-	GetSprite()->SetRelativeRotation(FRotator(0,0,-90));
+	CurrentHealth = Data->Health;
+	OnHealthChanged.Broadcast(1);
 
-	GetCapsuleComponent()->SetCapsuleRadius(5);
-	GetCapsuleComponent()->SetCapsuleHalfHeight(10);
-
-	GetCharacterMovement()->GravityScale = 0;
+	CurrentState->OnEnter(this);
 }
 
 void AEntity::ChangeState(UBaseState* State)

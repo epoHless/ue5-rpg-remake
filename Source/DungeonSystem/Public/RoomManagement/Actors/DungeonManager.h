@@ -29,7 +29,4 @@ protected:
 	void ChangeTileset(const FRoomInstance& Room);
 	
 	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaTime) override;
 };

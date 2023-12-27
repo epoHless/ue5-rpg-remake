@@ -20,7 +20,8 @@ public class EntitySystem : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				"DungeonSystem"
 			}
 		);
 	}

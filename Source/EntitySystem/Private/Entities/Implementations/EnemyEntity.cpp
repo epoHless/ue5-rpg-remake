@@ -1,10 +1,10 @@
 ﻿#include "Entities/Implementations/EnemyEntity.h"
-
 #include "Kismet/GameplayStatics.h"
 
 AEnemyEntity::AEnemyEntity()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	SetupComponents();
 }
 
 void AEnemyEntity::BeginPlay()
@@ -19,9 +19,4 @@ void AEnemyEntity::BeginPlay()
 void AEnemyEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-}
-
-void AEnemyEntity::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
