@@ -5,6 +5,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "Managers/EntityController.h"
 
+void ADungeonGameMode::Destroyed()
+{
+	Super::Destroyed();
+
+	for (int i = 0; i < XSize * YSize; ++i) {
+		delete[] Rooms[i];
+	}
+	delete[] Rooms;
+}
+
 ADungeonGameMode::ADungeonGameMode()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -15,6 +25,11 @@ ADungeonGameMode::ADungeonGameMode()
 
 void ADungeonGameMode::BeginPlay()
 {
+	Rooms = new FRoomInstance*[XSize];
+	for (int i = 0; i < XSize; ++i) {
+		Rooms[i] = new FRoomInstance[YSize];
+	}
+	
 	Super::BeginPlay();
 
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(this);
@@ -29,11 +44,16 @@ void ADungeonGameMode::BeginPlay()
 void ADungeonGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("Entity 2: %f"), CurrentRoom.Entities[1].CurrentHP));
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("Entity 1: %f"), CurrentRoom.Entities[0].CurrentHP));
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("X: %d | Y: %d"), CurrentRoom.Position.X, CurrentRoom.Position.Y));
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, TEXT("Room Values"));
 }
 
 void ADungeonGameMode::InitDungeon()
 {	
-	const int32 ActualSize = 10 * 10;
+	const int32 ActualSize = XSize * YSize;
 	FIntVector RoomPosition = FIntVector(0,0,0);
 	
 	for (int i = 0; i < ActualSize; i++)
@@ -43,7 +63,7 @@ void ADungeonGameMode::InitDungeon()
 		
 		RoomPosition.X++;
 
-		if(RoomPosition.X >= 10)
+		if(RoomPosition.X >= XSize)
 		{
 			RoomPosition.X = 0;
 			RoomPosition.Y++;
@@ -55,8 +75,8 @@ void ADungeonGameMode::ChangeRoom(FIntVector Direction)
 {
 	const FIntVector DestinationPosition = CurrentRoom.Position + Direction;
 
-	if(DestinationPosition.X < 0 || DestinationPosition.X >= 10) return;
-	if(DestinationPosition.Y < 0 || DestinationPosition.Y >= 10) return;
+	if(DestinationPosition.X < 0 || DestinationPosition.X >= XSize) return;
+	if(DestinationPosition.Y < 0 || DestinationPosition.Y >= YSize) return;
 
 	CurrentRoom = Rooms[DestinationPosition.X][DestinationPosition.Y];
 

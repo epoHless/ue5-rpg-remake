@@ -2,6 +2,7 @@
 
 #include "FunctionLibraries/ExtensionLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "RoomManagement/DungeonGameMode.h"
 #include "Subsystems/RoomSubsystem.h"
 
 AEntityManager::AEntityManager()
@@ -56,7 +57,7 @@ void AEntityManager::ToggleEnemies(FRoomInstance& Room)
 		CurrentRoom.Entities[i].CurrentHP = Entities[i]->GetHP();
 		Entities[i]->Toggle(false);
 	}
-
+	
 	CurrentRoom = Room;
 	
 	for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)

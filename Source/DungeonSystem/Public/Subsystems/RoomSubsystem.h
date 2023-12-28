@@ -22,5 +22,8 @@ public:
 	FDungeonCallback OnRoomChanged;
 
 	UPROPERTY(BlueprintAssignable)
+	FDungeonCallback OnUpdateRoomValues;
+
+	UPROPERTY(BlueprintAssignable)
 	FDirectionCallback OnBoundHit;
 };

@@ -11,12 +11,16 @@ class APaperTileMapActor;
 UCLASS(Blueprintable, BlueprintType)
 class DUNGEONSYSTEM_API ADungeonGameMode : public AGameModeBase
 {
+public:
+	virtual void Destroyed() override;
+
+private:
 	GENERATED_BODY()
 
 public:
 	ADungeonGameMode();
 
-protected:
+protected:	
 	virtual void BeginPlay() override;
 
 public:
@@ -27,11 +31,17 @@ private:
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	TArray<URoomTemplate*> Templates;
 
-	FRoomInstance Rooms[10][10];
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	int32 XSize = 10;
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	int32 YSize = 10;
+	
+	FRoomInstance** Rooms;
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Dungeon System")
 	FRoomInstance CurrentRoom;
-
+	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	float TPLenght = 170;
 	

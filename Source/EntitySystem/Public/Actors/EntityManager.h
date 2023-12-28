@@ -39,5 +39,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
 	TSubclassOf<AEntity> EntityClass;
 
+	UPROPERTY()
 	FRoomInstance CurrentRoom;
 };
