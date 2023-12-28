@@ -24,7 +24,6 @@ protected:
 
 	UFUNCTION()
 	void DisableEntity(AEntity* Entity);
-	bool Predicate(const AEntity& Entity);
 
 	virtual void BeginPlay() override;
 
@@ -33,7 +32,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
 	int32 EntitiesToSpawn = 2;
 	
-	UPROPERTY(VisibleAnywhere, Category = "RPG|Dungeon")
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
 	TArray<AEntity*> Entities;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")

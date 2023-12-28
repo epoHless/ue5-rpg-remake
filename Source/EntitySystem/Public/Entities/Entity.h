@@ -47,9 +47,12 @@ public:
 
 	void ChangeState(UBaseState* State);
 
-	void Toggle(bool bValue);
-	bool bEnabled;
+	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Entity")
+	void ToggleEntity(bool bValue);
 	
+	bool bEnabled;
+
+	UFUNCTION(BlueprintCallable)
 	void SetupEntity(UEntityDataAsset* Data);
 	
 	virtual void Tick(float DeltaTime) override;

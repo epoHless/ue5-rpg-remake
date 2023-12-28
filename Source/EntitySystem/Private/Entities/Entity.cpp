@@ -66,7 +66,7 @@ void AEntity::SetupEntity(UEntityDataAsset* Data)
 		SetFlipbook(Data->FlipbookDataAsset->IdleFlipbook);
 		ChangeState(Data->IdleState);
 	}
-
+	
 	CurrentHealth = Data->Health;
 	OnHealthChanged.Broadcast(1);
 
@@ -80,7 +80,7 @@ void AEntity::ChangeState(UBaseState* State)
 	CurrentState->OnEnter(this);
 }
 
-void AEntity::Toggle(bool bValue)
+void AEntity::ToggleEntity_Implementation(bool bValue)
 {
 	bEnabled = bValue;
 	SetActorTickEnabled(bValue);

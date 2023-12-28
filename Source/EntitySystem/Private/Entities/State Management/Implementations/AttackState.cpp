@@ -3,7 +3,6 @@
 #include "Entities/Entity.h"
 #include "Entities/Implementations/EnemyEntity.h"
 #include "GameFramework/GameModeBase.h"
-#include "GameFramework/PawnMovementComponent.h"
 
 void UAttackState::OnEnter_Implementation(AEntity* Entity)
 {
@@ -46,6 +45,9 @@ void UAttackState::Attack(AEntity* Entity, AGameModeBase* GameMode)
 		if(Result.GetActor()->GetClass()->ImplementsInterface(UDamageable::StaticClass()))
 		{
 			IDamageable::Execute_TakeDamage(Result.GetActor(), Damage);
+
+			Cast<ACharacter>(Result.GetActor())->LaunchCharacter(TraceDirection * 20, false, false);
+			
 			UE_LOG(LogTemp, Display, TEXT("Attacking!"));
 		}
 	}

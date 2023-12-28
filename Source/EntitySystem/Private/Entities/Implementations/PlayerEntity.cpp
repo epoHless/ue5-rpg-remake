@@ -15,8 +15,3 @@ void APlayerEntity::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
-void APlayerEntity::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}

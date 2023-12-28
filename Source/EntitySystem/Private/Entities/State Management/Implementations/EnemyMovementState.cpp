@@ -22,8 +22,10 @@ void UEnemyMovementState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase
 		FVector Direction = PlayerPawn->GetActorLocation() - Entity->GetActorLocation();
 		Direction.Normalize();
 
-		const FVector NewLocation = Entity->GetActorLocation() + Direction * MovementSpeed;
-		Entity->SetActorLocation(NewLocation);
+		Entity->AddMovementInput(Direction * MovementSpeed);
+		
+		// const FVector NewLocation = Entity->GetActorLocation() + Direction * MovementSpeed;
+		// Entity->SetActorLocation(NewLocation);
 		
 		if (FVector::Distance(Entity->GetActorLocation(), PlayerPawn->GetActorLocation()) < ToAttackDistance)
 		{

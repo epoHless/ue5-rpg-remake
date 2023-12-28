@@ -24,22 +24,22 @@ void AEntityManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Entities.Empty();
+	// Entities.Empty();
 
 	if(EntityClass != nullptr)
 	{
-		UWorld* const World = GetWorld();
+		const UWorld* const World = GetWorld();
 
 		if (World != nullptr)
 		{
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
-			for (int i = 0; i < EntitiesToSpawn; i++)
+			for (const auto Entity : Entities)
 			{
-				AEntity* Entity = World->SpawnActor<AEntity>(EntityClass, GetActorLocation(), GetActorRotation(), SpawnParams);
+				// AEntity* Entity = World->SpawnActor<AEntity>(EntityClass, GetActorLocation(), GetActorRotation(), SpawnParams);
 				Entity->OnDeath.AddDynamic(this, &AEntityManager::DisableEntity);
-				Entity->Toggle(false);
+				Entity->ToggleEntity(false);
 		
 				Entities.Add(Entity);
 			}
@@ -55,7 +55,7 @@ void AEntityManager::ToggleEnemies(FRoomInstance& Room)
 	for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
 	{
 		CurrentRoom.Entities[i].CurrentHP = Entities[i]->GetHP();
-		Entities[i]->Toggle(false);
+		Entities[i]->ToggleEntity(false);
 	}
 
 	Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this))->UpdateRoom(CurrentRoom);
@@ -73,7 +73,7 @@ void AEntityManager::ToggleEnemies(FRoomInstance& Room)
 			Entity->SetupEntity(CurrentRoom.Entities[i].Data);
 			Entity->SetHP(CurrentRoom.Entities[i].CurrentHP);
 			Entity->SetActorLocation(FVector(100 * (1 + i),100, 15));
-			Entity->Toggle(true);
+			Entity->ToggleEntity(true);
 
 			UE_LOG(LogTemp, Display, TEXT("Loaded Entity with %f HPs"), Entity->GetHP());
 		}
@@ -90,6 +90,6 @@ void AEntityManager::DisableEntity(AEntity* Entity)
 	Instance->bActive = false;
 	Instance->CurrentHP = 0;
 	
-	Entity->Toggle(false);
+	Entity->ToggleEntity(false);
 	Entity->SetActorLocation(GetActorLocation());
 }
