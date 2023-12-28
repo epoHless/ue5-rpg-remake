@@ -51,6 +51,11 @@ void ADungeonGameMode::Tick(float DeltaTime)
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, TEXT("Room Values"));
 }
 
+void ADungeonGameMode::UpdateRoom(const FRoomInstance& RoomInstance)
+{
+	Rooms[RoomInstance.Position.X][RoomInstance.Position.Y] = RoomInstance;
+}
+
 void ADungeonGameMode::InitDungeon()
 {	
 	const int32 ActualSize = XSize * YSize;

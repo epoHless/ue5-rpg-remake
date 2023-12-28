@@ -57,6 +57,8 @@ void AEntityManager::ToggleEnemies(FRoomInstance& Room)
 		CurrentRoom.Entities[i].CurrentHP = Entities[i]->GetHP();
 		Entities[i]->Toggle(false);
 	}
+
+	Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this))->UpdateRoom(CurrentRoom);
 	
 	CurrentRoom = Room;
 	

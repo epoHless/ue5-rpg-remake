@@ -25,6 +25,9 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void UpdateRoom(const FRoomInstance& RoomInstance);
 	
 private:
 
