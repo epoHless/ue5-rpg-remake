@@ -19,7 +19,7 @@ void ADungeonManager::BeginPlay()
 	RoomSubsystem->OnRoomChanged.AddDynamic(this, &ADungeonManager::ChangeTileset);
 }
 
-void ADungeonManager::ChangeTileset(const FRoomInstance& Room)
+void ADungeonManager::ChangeTileset(FRoomInstance& Room)
 {
 	TilemapActor->GetRenderComponent()->SetTileMap(Room.TileMap);
 }

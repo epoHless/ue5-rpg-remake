@@ -49,30 +49,44 @@ void AEntityManager::BeginPlay()
 	}
 }
 
-void AEntityManager::ToggleEnemies(const FRoomInstance& Room)
+void AEntityManager::ToggleEnemies(FRoomInstance& Room)
 {
-	for (const auto Entity : Entities)
+	for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
 	{
-		Entity->Toggle(false);
+		CurrentRoom.Entities[i].CurrentHP = Entities[i]->GetHP();
+		Entities[i]->Toggle(false);
 	}
+
+	CurrentRoom = Room;
 	
-	for (int i = 0; i < Room.Entities.Num(); ++i)
+	for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
 	{
-		if(Room.Entities[i].Value) continue;
+		if(!CurrentRoom.Entities[i].bActive || CurrentRoom.Entities[i].CurrentHP <= 0) continue;
 		
 		const auto Entity = Get();
 		
 		if(Entity != nullptr)
 		{
-			Entity->SetupEntity(Room.Entities[i].Key);
-			Entity->SetActorLocation(FVector(100 * (1 + i),100 * (1 + i), 15));
+			Entity->SetupEntity(CurrentRoom.Entities[i].Data);
+			Entity->SetHP(CurrentRoom.Entities[i].CurrentHP);
+			Entity->SetActorLocation(FVector(100 * (1 + i),100, 15));
 			Entity->Toggle(true);
+
+			UE_LOG(LogTemp, Display, TEXT("Loaded Entity with %f HPs"), Entity->GetHP());
 		}
 	}
 }
 
 void AEntityManager::DisableEntity(AEntity* Entity)
 {
+	const auto Instance = CurrentRoom.Entities.FindByPredicate([&Entity](const FEntityInstance& Element)
+	{
+		return Entity->EntityDataAsset == Element.Data;
+	});
+	
+	Instance->bActive = false;
+	Instance->CurrentHP = 0;
+	
 	Entity->Toggle(false);
 	Entity->SetActorLocation(GetActorLocation());
 }

@@ -20,11 +20,12 @@ public:
 protected:
 	
 	UFUNCTION()
-	void ToggleEnemies(const FRoomInstance& Room);
+	void ToggleEnemies(FRoomInstance& Room);
 
 	UFUNCTION()
 	void DisableEntity(AEntity* Entity);
-	
+	bool Predicate(const AEntity& Entity);
+
 	virtual void BeginPlay() override;
 
 private:
@@ -37,4 +38,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
 	TSubclassOf<AEntity> EntityClass;
+
+	FRoomInstance CurrentRoom;
 };

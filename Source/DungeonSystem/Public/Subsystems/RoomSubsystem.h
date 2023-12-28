@@ -5,7 +5,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "RoomSubsystem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonCallback, const FRoomInstance&, Room);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonCallback, FRoomInstance&, Room);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDirectionCallback, FIntVector, Direction);
 
 UCLASS()

@@ -26,7 +26,7 @@ private:
 
 protected:
 	UFUNCTION()
-	void ChangeTileset(const FRoomInstance& Room);
+	void ChangeTileset(FRoomInstance& Room);
 	
 	virtual void BeginPlay() override;
 };

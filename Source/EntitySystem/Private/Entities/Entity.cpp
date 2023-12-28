@@ -11,6 +11,7 @@ void AEntity::TakeDamage_Implementation(float Damage)
 	CurrentHealth -= Damage;
 
 	OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
+	UE_LOG(LogTemp, Display, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
 	
 	if(CurrentHealth <= 0)
 	{

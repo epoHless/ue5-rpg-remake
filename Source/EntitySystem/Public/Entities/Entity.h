@@ -19,10 +19,17 @@ UCLASS(Abstract, Blueprintable, BlueprintType)
 class ENTITYSYSTEM_API AEntity : public APaperCharacter, public IDamageable
 {
 public:
-
 	AEntity();
 	
 	virtual void TakeDamage_Implementation(float Damage) override;
+	
+	FORCEINLINE virtual void SetHP(float HP) override
+	{
+		CurrentHealth = HP;
+		OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
+	}
+
+	FORCEINLINE virtual float GetHP() const override { return CurrentHealth; }
 
 	UPROPERTY(BlueprintAssignable)
 	FHealthCallback OnHealthChanged;
@@ -43,9 +50,9 @@ public:
 	void Toggle(bool bValue);
 	bool bEnabled;
 	
-	virtual void Tick(float DeltaTime) override;
-
 	void SetupEntity(UEntityDataAsset* Data);
+	
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;

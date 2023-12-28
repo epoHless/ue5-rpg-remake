@@ -25,10 +25,6 @@ void UEnemyMovementState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase
 		const FVector NewLocation = Entity->GetActorLocation() + Direction * MovementSpeed;
 		Entity->SetActorLocation(NewLocation);
 		
-		// Entity->GetMovementComponent()->Velocity = Direction * MovementSpeed;
-
-		UE_LOG(LogTemp, Display, TEXT("%s Distance: %f"), *Entity->GetName(), Entity->GetMovementComponent()->Velocity.Length());
-		
 		if (FVector::Distance(Entity->GetActorLocation(), PlayerPawn->GetActorLocation()) < ToAttackDistance)
 		{
 			UE_LOG(LogTemp, Display, TEXT("Can Attack!"));

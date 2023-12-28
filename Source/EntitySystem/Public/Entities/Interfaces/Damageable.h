@@ -16,6 +16,9 @@ class ENTITYSYSTEM_API IDamageable
 
 public:
 
+	FORCEINLINE virtual float GetHP() const;
+	FORCEINLINE virtual void SetHP(float HP){}
+	
 	UFUNCTION(BlueprintNativeEvent)
 	void TakeDamage(float Damage);
 

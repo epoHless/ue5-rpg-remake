@@ -1,8 +1,10 @@
 ﻿#include "Managers/EntityController.h"
 
 #include "PaperFlipbookComponent.h"
+#include "Entities/Implementations/EnemyEntity.h"
 #include "Entities/Implementations/PlayerEntity.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 void AEntityController::SetupInputComponent()
 {
@@ -10,6 +12,8 @@ void AEntityController::SetupInputComponent()
 	
 	InputComponent->BindAxis(TEXT("Horizontal"), this, &AEntityController::HorizontalMovement);
 	InputComponent->BindAxis(TEXT("Vertical"), this, &AEntityController::VerticalMovement);
+	
+	InputComponent->BindAction(TEXT("Damage"), IE_Pressed, this, &AEntityController::DealDamage);
 }
 
 void AEntityController::HorizontalMovement(float Value)
@@ -22,6 +26,18 @@ void AEntityController::VerticalMovement(float Value)
 {
 	VerticalValue = Value;
 }
+
+void AEntityController::DealDamage()
+{
+	TArray<AActor*> Enemies;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyEntity::StaticClass(), Enemies);
+
+	for (const auto Enemy : Enemies)
+	{
+		IDamageable::Execute_TakeDamage(Enemy, 10);
+	}
+}
+
 
 AEntityController::AEntityController()
 {

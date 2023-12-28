@@ -9,9 +9,10 @@ class ENTITYSYSTEM_API AEntityController : public APlayerController
 {
 protected:
 	virtual void SetupInputComponent() override;
-	
+
 	void HorizontalMovement(float Value);
 	void VerticalMovement(float Value);
+	void DealDamage();
 
 	float HorizontalValue;
 	float VerticalValue;

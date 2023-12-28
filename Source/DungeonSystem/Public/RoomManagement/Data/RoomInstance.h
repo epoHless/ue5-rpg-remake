@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "PaperTileMap.h"
 #include "RoomTemplate.h"
+#include "Data/EntityInstance.h"
 #include "RoomInstance.generated.h"
 
 class URoomTemplate;
@@ -17,21 +18,23 @@ struct DUNGEONSYSTEM_API FRoomInstance
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	UPaperTileMap* TileMap;
-	
-	TArray<TTuple<UEntityDataAsset*, bool>> Entities;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<FEntityInstance> Entities;
 	
 	FRoomInstance(const URoomTemplate* Template, FIntVector Position) :
 	Position(Position), TileMap(Template->TileMap)
 	{
 		for (int i = 0; i < 2; ++i)
 		{
-			Entities.Add(MakeTuple(Template->SpawnableEntities[FMath::RandRange(0, Template->SpawnableEntities.Num() - 1)], false));
+			const auto Data = Template->SpawnableEntities[FMath::RandRange(0, Template->SpawnableEntities.Num() - 1)];
+			Entities.Add(FEntityInstance(Data, Data->Health, true));
 		}
 	}
 
 	bool IsCompleted()
 	{
-		return Entities[0].Value && Entities[1].Value;
+		return Entities[0].bActive && Entities[1].bActive;
 	}
 
 	FRoomInstance() {}
