@@ -13,6 +13,7 @@ class UBaseState;
 class UPaperFlipbook;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHealthCallback, float, Percentage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeathCallback, AEntity*, Entity);
 
 UCLASS(Abstract, Blueprintable, BlueprintType)
 class ENTITYSYSTEM_API AEntity : public APaperCharacter, public IDamageable
@@ -26,6 +27,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FHealthCallback OnHealthChanged;
 
+	UPROPERTY(BlueprintAssignable)
+	FDeathCallback OnDeath;
+
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
 	UEntityDataAsset* EntityDataAsset;
 
@@ -35,14 +39,17 @@ public:
 	FORCEINLINE UPaperFlipbook* GetRunFlipbook() const { return EntityDataAsset->FlipbookDataAsset->RunFlipbook; }
 
 	void ChangeState(UBaseState* State);
+
+	void Toggle(bool bValue);
+	bool bEnabled;
 	
 	virtual void Tick(float DeltaTime) override;
 
+	void SetupEntity(UEntityDataAsset* Data);
+
 protected:
-	
 	virtual void BeginPlay() override;
 
-	void SetupEntity(const UEntityDataAsset* Data);
 	void SetupComponents();
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity")

@@ -15,6 +15,8 @@ void AEntity::TakeDamage_Implementation(float Damage)
 	if(CurrentHealth <= 0)
 	{
 		OnDeath_Implementation();
+
+		OnDeath.Broadcast(this);
 	}
 }
 
@@ -37,6 +39,9 @@ AEntity::AEntity()
 void AEntity::BeginPlay()
 {
 	Super::BeginPlay();
+
+	const FVector Location = GetActorLocation();
+	SetActorLocation(FVector(Location.X, Location.Y, 15));
 }
 
 void AEntity::Tick(float DeltaTime)
@@ -50,10 +55,12 @@ void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)
 	GetSprite()->SetFlipbook(Flipbook);
 }
 
-void AEntity::SetupEntity(const UEntityDataAsset* Data)
+void AEntity::SetupEntity(UEntityDataAsset* Data)
 {
 	if(Data->FlipbookDataAsset != nullptr)
 	{
+		EntityDataAsset = Data;
+		
 		CurrentHealth = Data->Health;
 		SetFlipbook(Data->FlipbookDataAsset->IdleFlipbook);
 		ChangeState(Data->IdleState);
@@ -70,4 +77,12 @@ void AEntity::ChangeState(UBaseState* State)
 	if(CurrentState != nullptr) CurrentState->OnExit(this);
 	CurrentState = State;
 	CurrentState->OnEnter(this);
+}
+
+void AEntity::Toggle(bool bValue)
+{
+	bEnabled = bValue;
+	SetActorTickEnabled(bValue);
+	SetActorHiddenInGame(!bValue);
+	SetActorEnableCollision(bValue);
 }

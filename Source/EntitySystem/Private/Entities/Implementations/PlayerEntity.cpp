@@ -20,8 +20,3 @@ void APlayerEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
-void APlayerEntity::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}

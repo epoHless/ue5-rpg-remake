@@ -17,7 +17,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
 	FORCEINLINE APawn* GetPawn() const { return PlayerPawn; }
 
 private:

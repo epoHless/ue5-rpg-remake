@@ -19,10 +19,10 @@ private:
 	float MovementSpeed = 50;
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	float AttackRange = 100;
+	float ToAttackDistance = 100;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
-	float PatrolRange = 200;
+	float ToIdleDistance = 200;
 
 	UPROPERTY()
 	APawn* PlayerPawn = nullptr;
