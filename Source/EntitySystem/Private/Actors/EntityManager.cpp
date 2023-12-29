@@ -24,8 +24,6 @@ void AEntityManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Entities.Empty();
-
 	if(EntityClass != nullptr)
 	{
 		const UWorld* const World = GetWorld();
@@ -37,7 +35,6 @@ void AEntityManager::BeginPlay()
 	
 			for (const auto Entity : Entities)
 			{
-				// AEntity* Entity = World->SpawnActor<AEntity>(EntityClass, GetActorLocation(), GetActorRotation(), SpawnParams);
 				Entity->OnDeath.AddDynamic(this, &AEntityManager::DisableEntity);
 				Entity->ToggleEntity(false);
 		

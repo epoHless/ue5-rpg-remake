@@ -5,15 +5,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Managers/EntityController.h"
 
-void ADungeonGameMode::Destroyed()
+void ADungeonGameMode::Cleanup()
 {
-	Super::Destroyed();
-
 	for (int i = 0; i < XSize * YSize; ++i) {
 		delete[] Rooms[i];
 	}
 	delete[] Rooms;
 }
+
 
 ADungeonGameMode::ADungeonGameMode()
 {

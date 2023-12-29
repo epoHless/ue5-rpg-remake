@@ -11,8 +11,8 @@ class APaperTileMapActor;
 UCLASS(Blueprintable, BlueprintType)
 class DUNGEONSYSTEM_API ADungeonGameMode : public AGameModeBase
 {
-public:
-	virtual void Destroyed() override;
+protected:
+
 
 private:
 	GENERATED_BODY()
@@ -22,6 +22,8 @@ public:
 
 protected:	
 	virtual void BeginPlay() override;
+
+	void Cleanup();
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -39,7 +41,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	int32 YSize = 10;
-	
+
 	FRoomInstance** Rooms;
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Dungeon System")
