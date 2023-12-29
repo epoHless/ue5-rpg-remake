@@ -20,31 +20,29 @@ AEntity* AEntityManager::Get()
 	return nullptr;
 }
 
+void AEntityManager::InitSystem(FRoomInstance& Room)
+{
+	const UWorld* const World = GetWorld();
+
+	if (World != nullptr)
+	{
+		for (const auto Entity : Entities)
+		{
+			Entity->OnDeath.AddDynamic(this, &AEntityManager::DisableEntity);
+			Entity->ToggleEntity(false);
+		}
+
+		const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
+		RoomSubsystem->OnRoomChanged.AddDynamic(this, &AEntityManager::ToggleEnemies);
+	}
+}
+
 void AEntityManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if(EntityClass != nullptr)
-	{
-		const UWorld* const World = GetWorld();
-
-		if (World != nullptr)
-		{
-			FActorSpawnParameters SpawnParams;
-			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	
-			for (const auto Entity : Entities)
-			{
-				Entity->OnDeath.AddDynamic(this, &AEntityManager::DisableEntity);
-				Entity->ToggleEntity(false);
-		
-				Entities.Add(Entity);
-			}
-	
-			const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
-			RoomSubsystem->OnRoomChanged.AddDynamic(this, &AEntityManager::ToggleEnemies);
-		}
-	}
+	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
+	RoomSubsystem->OnDungeonInit.AddDynamic(this, &AEntityManager::InitSystem);
 }
 
 void AEntityManager::ToggleEnemies(FRoomInstance& Room)
@@ -68,7 +66,7 @@ void AEntityManager::ToggleEnemies(FRoomInstance& Room)
 		if(Entity != nullptr)
 		{
 			Entity->SetupEntity(CurrentRoom.Entities[i].Data);
-			Entity->SetHP(CurrentRoom.Entities[i].CurrentHP);
+			Entity->AddHP(CurrentRoom.Entities[i].CurrentHP);
 			Entity->SetActorLocation(FVector(100 * (1 + i),100, 15));
 			Entity->ToggleEntity(true);
 

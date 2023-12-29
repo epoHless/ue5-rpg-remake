@@ -1,5 +1,7 @@
 ﻿#include "Entities/Implementations/PlayerEntity.h"
 
+#include "Inventory/Inventory.h"
+
 void APlayerEntity::TakeDamage_Implementation(float Damage)
 {
 	if(CurrentShield <= 0)
@@ -34,9 +36,19 @@ void APlayerEntity::TakeDamage_Implementation(float Damage)
 	}
 }
 
+void APlayerEntity::AddShield(float Value)
+{
+	CurrentShield += Value;
+	OnShieldChanged.Broadcast(CurrentShield/MaxShield);
+
+	if(CurrentShield > MaxShield) CurrentShield = MaxShield;
+}
+
 APlayerEntity::APlayerEntity()
 {	
 	PrimaryActorTick.bCanEverTick = true;
+
+	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory"));
 
 	const auto DataObjectFinder = ConstructorHelpers::FObjectFinder<UEntityDataAsset>(TEXT("/Script/EntitySystem.EntityDataAsset'/Game/Core/Data/Player/PlayerData.PlayerData'"));
 	EntityDataAsset = DataObjectFinder.Object;

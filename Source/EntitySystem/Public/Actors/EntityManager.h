@@ -17,6 +17,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "RPG|Dungeon")
 	AEntity* Get();
 
+	UFUNCTION()
+	void InitSystem(FRoomInstance& Room);
+
 protected:
 	
 	UFUNCTION()
@@ -28,15 +31,9 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
-	int32 EntitiesToSpawn = 2;
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
 	TArray<AEntity*> Entities;
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
-	TSubclassOf<AEntity> EntityClass;
 
 	UPROPERTY()
 	FRoomInstance CurrentRoom;

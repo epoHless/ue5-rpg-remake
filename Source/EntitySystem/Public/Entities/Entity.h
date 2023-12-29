@@ -23,10 +23,12 @@ public:
 	
 	virtual void TakeDamage_Implementation(float Damage) override;
 	
-	FORCEINLINE virtual void SetHP(float HP) override
+	FORCEINLINE virtual void AddHP(float HP) override
 	{
-		CurrentHealth = HP;
+		CurrentHealth += HP;
 		OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
+
+		if(CurrentHealth > EntityDataAsset->Health) CurrentHealth = EntityDataAsset->Health; 
 	}
 
 	FORCEINLINE virtual float GetHP() const override { return CurrentHealth; }

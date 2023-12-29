@@ -16,7 +16,6 @@ void AEntity::TakeDamage_Implementation(float Damage)
 	if(CurrentHealth <= 0)
 	{
 		OnDeath_Implementation();
-
 		OnDeath.Broadcast(this);
 	}
 }

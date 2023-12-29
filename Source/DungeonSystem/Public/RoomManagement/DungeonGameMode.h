@@ -30,17 +30,17 @@ public:
 
 	UFUNCTION()
 	void UpdateRoom(const FRoomInstance& RoomInstance);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Dungeon System")
+	int32 XSize = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Dungeon System")
+	int32 YSize = 10;
 	
 private:
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	TArray<URoomTemplate*> Templates;
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	int32 XSize = 10;
-
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	int32 YSize = 10;
 
 	FRoomInstance** Rooms;
 

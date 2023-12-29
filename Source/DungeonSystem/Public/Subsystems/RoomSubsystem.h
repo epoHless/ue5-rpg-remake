@@ -18,6 +18,10 @@ private:
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintAssignable)
+	FDungeonCallback OnDungeonInit;
+	
 	UPROPERTY(BlueprintAssignable)
 	FDungeonCallback OnRoomChanged;
 

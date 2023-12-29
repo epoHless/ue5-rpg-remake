@@ -38,6 +38,8 @@ void ADungeonGameMode::BeginPlay()
 
 	CurrentRoom = Rooms[0][0];
 	ChangeRoom(FIntVector::ZeroValue);
+
+	RoomSubsystem->OnDungeonInit.Broadcast(CurrentRoom);
 }
 
 void ADungeonGameMode::Tick(float DeltaTime)
