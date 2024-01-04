@@ -19,17 +19,13 @@ UCLASS(Abstract, Blueprintable, BlueprintType)
 class ENTITYSYSTEM_API AEntity : public APaperCharacter, public IDamageable
 {
 public:
+	virtual void SetHealth_Implementation(float HP) override;
+
 	AEntity();
 	
-	virtual void TakeDamage_Implementation(float Damage) override;
-	
-	FORCEINLINE virtual void AddHP(float HP) override
-	{
-		CurrentHealth += HP;
-		OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
+	virtual void AddHP_Implementation(float HP) override;
 
-		if(CurrentHealth > EntityDataAsset->Health) CurrentHealth = EntityDataAsset->Health; 
-	}
+	virtual void TakeDamage_Implementation(float Damage) override;
 
 	FORCEINLINE virtual float GetHP() const override { return CurrentHealth; }
 
@@ -49,7 +45,7 @@ public:
 
 	void ChangeState(UBaseState* State);
 
-	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Entity")
+	UFUNCTION(BlueprintCallable, Category = "RPG|Entity")
 	void ToggleEntity(bool bValue);
 	
 	bool bEnabled;
@@ -66,6 +62,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity")
 	UBaseState* CurrentState;
+
+	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity|Health")
+	float MaxHealth;
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity|Health")
 	float CurrentHealth;

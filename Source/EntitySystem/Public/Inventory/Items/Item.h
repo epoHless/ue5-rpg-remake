@@ -4,28 +4,35 @@
 #include "Engine/DataAsset.h"
 #include "Item.generated.h"
 
-class AEntity;
+class UPaperSprite;
+class APlayerEntity;
 class UItemEffect;
 
-UCLASS(Blueprintable, BlueprintType, Abstract)
+UCLASS(Blueprintable, BlueprintType)
 class ENTITYSYSTEM_API UItem : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory|Items")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory")
+	bool bIsInfinite = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory")
 	bool bIsStackable = false;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory|Items")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory")
 	FString Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory|Items")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory")
+	UPaperSprite* Sprite;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory")
 	UTexture2D* Icon;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory|Items")
-	TArray<TSubclassOf<UItemEffect>> Effects;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Inventory")
+	TSubclassOf<UItemEffect> Effect;
 
-	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Inventory|Items")
-	void Execute(AEntity* User);
+	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Inventory")
+	void Execute(APlayerEntity* User, AGameModeBase* GameMode);
 };

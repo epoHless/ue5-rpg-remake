@@ -5,8 +5,10 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "RoomSubsystem.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonCallback, FRoomInstance&, Room);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDungeonCallback, FRoomInstance, Room);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDirectionCallback, FIntVector, Direction);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FExperienceCallback, float, Quantity);
 
 UCLASS()
 class DUNGEONSYSTEM_API URoomSubsystem : public UWorldSubsystem
@@ -19,6 +21,15 @@ private:
 
 public:
 
+	UPROPERTY(BlueprintAssignable)
+	FExperienceCallback OnEntityKilled;
+	
+	UPROPERTY(BlueprintAssignable)
+	FExperienceCallback OnExperienceGained;
+
+	UPROPERTY(BlueprintAssignable)
+	FExperienceCallback OnLevelUp;
+	
 	UPROPERTY(BlueprintAssignable)
 	FDungeonCallback OnDungeonInit;
 	

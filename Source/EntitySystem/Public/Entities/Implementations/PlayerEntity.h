@@ -4,6 +4,7 @@
 #include "Entities/Entity.h"
 #include "PlayerEntity.generated.h"
 
+class UExperienceComponent;
 class UInventory;
 
 UCLASS()
@@ -15,9 +16,6 @@ public:
 private:
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, Blueprintable, Category = "RPG|Inventory|Items")
-	UInventory* Inventory;
-
 	UPROPERTY(BlueprintAssignable)
 	FHealthCallback OnShieldChanged;
 
@@ -27,15 +25,32 @@ private:
 	UPROPERTY()
 	float CurrentShield;
 
+public:
+	APlayerEntity();
+
+	UFUNCTION(BlueprintPure, Category = "RPG|Inventory|Items")
+	FORCEINLINE UInventory* GetInventory() const { return Inventory; }
+
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetShield() { return CurrentShield; }
 
 	UFUNCTION(BlueprintCallable)
 	void AddShield(float Value);
 
-public:
-	APlayerEntity();
-
 protected:
+
+	UPROPERTY(VisibleAnywhere, Blueprintable, Category = "RPG|Inventory|Items")
+	UInventory* Inventory;
+
+	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity|Experience")
+	UExperienceComponent* ExperienceComponent;
+
+	UFUNCTION()
+	void OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnLevelUp(float Quantity);
+	
+	UFUNCTION()
 	virtual void BeginPlay() override;
 };

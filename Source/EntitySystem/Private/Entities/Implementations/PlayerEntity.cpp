@@ -1,6 +1,11 @@
 ﻿#include "Entities/Implementations/PlayerEntity.h"
 
+#include "Components/CapsuleComponent.h"
+#include "Experience/ExperienceComponent.h"
+#include "FunctionLibraries/ExtensionLibrary.h"
 #include "Inventory/Inventory.h"
+#include "Inventory/Pickables/Pickable.h"
+#include "Kismet/GameplayStatics.h"
 
 void APlayerEntity::TakeDamage_Implementation(float Damage)
 {
@@ -24,7 +29,7 @@ void APlayerEntity::TakeDamage_Implementation(float Damage)
 
 		CurrentHealth -= LeftOverDamage;
 		
-		OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
+		OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
 		UE_LOG(LogTemp, Display, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
 	
 		if(CurrentHealth <= 0)
@@ -48,7 +53,11 @@ APlayerEntity::APlayerEntity()
 {	
 	PrimaryActorTick.bCanEverTick = true;
 
-	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory"));
+	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory Component"));
+	Inventory->RegisterComponent();
+
+	ExperienceComponent = CreateDefaultSubobject<UExperienceComponent>(TEXT("Experience Component"));
+	ExperienceComponent->RegisterComponent();
 
 	const auto DataObjectFinder = ConstructorHelpers::FObjectFinder<UEntityDataAsset>(TEXT("/Script/EntitySystem.EntityDataAsset'/Game/Core/Data/Player/PlayerData.PlayerData'"));
 	EntityDataAsset = DataObjectFinder.Object;
@@ -57,9 +66,30 @@ APlayerEntity::APlayerEntity()
 	SetupComponents();
 }
 
+
+void APlayerEntity::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->GetClass()->ImplementsInterface(UPickable::StaticClass()))
+	{
+		IPickable::Execute_OnPickup(OtherActor, this);
+	}
+}
+
+void APlayerEntity::OnLevelUp(float Quantity)
+{
+	MaxHealth *= Quantity;
+	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
+}
+
 void APlayerEntity::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &APlayerEntity::OnPickupOverlap);
+	
+	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
+	RoomSubsystem->OnLevelUp.AddDynamic(this, &APlayerEntity::OnLevelUp);
 
 	CurrentShield = MaxShield;
 }

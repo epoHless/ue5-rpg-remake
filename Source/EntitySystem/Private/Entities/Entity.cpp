@@ -30,6 +30,20 @@ void AEntity::SetupComponents()
 	GetCharacterMovement()->GravityScale = 0;
 }
 
+void AEntity::AddHP_Implementation(float HP)
+{
+	CurrentHealth += HP;
+	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
+
+	if(CurrentHealth > MaxHealth) CurrentHealth = MaxHealth; 
+}
+
+void AEntity::SetHealth_Implementation(float HP)
+{
+	CurrentHealth = HP;
+	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
+}
+
 AEntity::AEntity()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -44,17 +58,6 @@ void AEntity::BeginPlay()
 	SetActorLocation(FVector(Location.X, Location.Y, 15));
 }
 
-void AEntity::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	if(CurrentState != nullptr) CurrentState->OnUpdate(this, UGameplayStatics::GetGameMode(this));
-}
-
-void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)
-{
-	GetSprite()->SetFlipbook(Flipbook);
-}
-
 void AEntity::SetupEntity(UEntityDataAsset* Data)
 {
 	if(Data->FlipbookDataAsset != nullptr)
@@ -66,10 +69,21 @@ void AEntity::SetupEntity(UEntityDataAsset* Data)
 		ChangeState(Data->IdleState);
 	}
 	
-	CurrentHealth = Data->Health;
+	CurrentHealth = MaxHealth;
 	OnHealthChanged.Broadcast(1);
 
 	CurrentState->OnEnter(this);
+}
+
+void AEntity::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if(CurrentState != nullptr) CurrentState->OnUpdate(this, UGameplayStatics::GetGameMode(this));
+}
+
+void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)
+{
+	GetSprite()->SetFlipbook(Flipbook);
 }
 
 void AEntity::ChangeState(UBaseState* State)
@@ -79,10 +93,12 @@ void AEntity::ChangeState(UBaseState* State)
 	CurrentState->OnEnter(this);
 }
 
-void AEntity::ToggleEntity_Implementation(bool bValue)
+void AEntity::ToggleEntity(bool bValue)
 {
 	bEnabled = bValue;
 	SetActorTickEnabled(bValue);
 	SetActorHiddenInGame(!bValue);
 	SetActorEnableCollision(bValue);
+
+	GetMovementComponent()->Velocity = FVector::ZeroVector;
 }

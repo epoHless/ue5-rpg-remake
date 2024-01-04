@@ -1,10 +1,7 @@
 ﻿#include "Inventory/Items/Item.h"
 #include "EntitySystem/Public/Inventory/Items/Effects/ItemEffect.h"
 
-void UItem::Execute_Implementation(AEntity* User)
+void UItem::Execute_Implementation(APlayerEntity* User, AGameModeBase* GameMode)
 {
-	for (auto Effect : Effects)
-	{
-		Effect.GetDefaultObject()->Execute(User);
-	}
+	Effect.GetDefaultObject()->Execute(GameMode, User);
 }

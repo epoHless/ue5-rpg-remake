@@ -4,7 +4,7 @@
 #include "UObject/Object.h"
 #include "ItemEffect.generated.h"
 
-class AEntity;
+class APlayerEntity;
 
 UCLASS(Blueprintable, BlueprintType, Abstract)
 class ENTITYSYSTEM_API UItemEffect : public UObject
@@ -13,6 +13,6 @@ class ENTITYSYSTEM_API UItemEffect : public UObject
 
 public:
 
-	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Inventory|Items")
-	void Execute(AEntity* User);
+	UFUNCTION(BlueprintNativeEvent, Category = "RPG|Inventory")
+	void Execute(AGameModeBase* GameMode, APlayerEntity* User);
 };

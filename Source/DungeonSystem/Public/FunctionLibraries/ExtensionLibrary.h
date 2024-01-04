@@ -5,14 +5,19 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ExtensionLibrary.generated.h"
 
+class APlayerEntity;
+
 UCLASS()
 class DUNGEONSYSTEM_API UExtensionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 
 	UFUNCTION(BlueprintPure, Category = "Chimera|Input System")
-	static bool LineTraceByMousePosition(const AGameModeBase* GameMode, FHitResult& HitResult);
-	
+	static bool LineTraceByMousePosition(const AGameModeBase* GameMode, FVector StartTrace, FHitResult& HitResult);
+	static FVector GetDirectionFromActor(const AGameModeBase* GameMode, AActor* Actor);
+	static TArray<FHitResult> SphereTraceByMousePosition(const AGameModeBase* GameMode, APlayerEntity* IgnoredActor,
+	                                                     float Radius, float Range);
+
 	template<typename T>
 	static T* GetSubsystemByGameInstance(const AGameModeBase* GameMode)
 	{

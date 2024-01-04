@@ -12,14 +12,17 @@ struct ENTITYSYSTEM_API FEntityInstance
 
 	FEntityInstance(){}
 
-	FEntityInstance(UEntityDataAsset* DataAsset, float CurrentHP, bool bActive) :
-	Data(DataAsset), CurrentHP(CurrentHP), bActive(bActive){}
+	FEntityInstance(UEntityDataAsset* DataAsset, float CurrentHP, FVector Position, bool bActive) :
+	Data(DataAsset), CurrentHP(CurrentHP), Position(Position), bActive(bActive){}
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	UEntityDataAsset* Data;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	float CurrentHP;
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	FVector Position;
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	bool bActive = true;

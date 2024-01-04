@@ -1,5 +1,4 @@
 ﻿#include "Inventory/InventorySlot.h"
-
 #include "Inventory/Items/Item.h"
 
 void UInventorySlot::AddItem(UItem* NewItem)
@@ -8,7 +7,7 @@ void UInventorySlot::AddItem(UItem* NewItem)
 	{
 		Item = NewItem;
 		if(!Item->bIsStackable) Stacks = -1;
-		else Stacks = 0;
+		else Stacks = 1;
 	}
 	else if(Stacks != -1 && HasItem())
 	{

@@ -6,6 +6,7 @@
 #include "Inventory.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInventoryCallback, UInventorySlot*, Item);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FInventoryUICallback, UInventorySlot*, Slot, int32, Index);
 
 class UInventorySlot;
 
@@ -16,35 +17,43 @@ class ENTITYSYSTEM_API UInventory : public UActorComponent
 
 public:
 
-	UPROPERTY(BlueprintAssignable, Category = "RPG|Inventory|Items")
-	FInventoryCallback OnItemAdded;
+	UPROPERTY(BlueprintAssignable, Category = "RPG|Inventory")
+	FInventoryUICallback OnItemAdded;
 
-	UPROPERTY(BlueprintAssignable, Category = "RPG|Inventory|Items")
-	FInventoryCallback OnItemRemoved;
+	UPROPERTY(BlueprintAssignable, Category = "RPG|Inventory")
+	FInventoryUICallback OnItemRemoved;
+	
+	UPROPERTY(BlueprintAssignable, Category = "RPG|Inventory")
+	FInventoryUICallback OnSlotChanged;
 	
 	UInventory();
 
-	UFUNCTION(BlueprintPure, Category = "RPG|Inventory|Items")
+	UFUNCTION(BlueprintPure, Category = "RPG|Inventory")
 	bool HasFreeSlot() const;
 
-	UFUNCTION(BlueprintPure, Category = "RPG|Inventory|Items")
-	UInventorySlot* GetFirstFreeSlot() const;
+	UFUNCTION(BlueprintPure, Category = "RPG|Inventory")
+	UInventorySlot* GetFirstFreeSlot(const UItem* Item) const;
 
-	UFUNCTION(BlueprintPure, Category = "RPG|Inventory|Items")
+	UFUNCTION(BlueprintPure, Category = "RPG|Inventory")
 	bool AddItem(UItem* Item) const;
 
-	UFUNCTION(BlueprintPure, Category = "RPG|Inventory|Items")
+	UFUNCTION(BlueprintPure, Category = "RPG|Inventory")
 	bool RemoveItem(UInventorySlot* Item) const;
+
+	UFUNCTION(BlueprintCallable, Category = "RPG|Inventory")
+	void UseItem();
+	
+	void ChangeSlot(int Value);
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
 
-	UPROPERTY(EditAnywhere, Category = "RPG|Inventory|Items")
-	int32 InventorySize = 6;
+	UPROPERTY()
+	int32 InventorySize = 5;
 	
-	UPROPERTY(VisibleAnywhere, Category = "RPG|Inventory|Items")
+	UPROPERTY()
 	TArray<UInventorySlot*> InventorySlots;
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Inventory|Items")

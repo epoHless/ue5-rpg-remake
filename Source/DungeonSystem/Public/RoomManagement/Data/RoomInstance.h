@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "PaperTileMap.h"
 #include "RoomTemplate.h"
+#include "Data/EntityDataAsset.h"
 #include "Data/EntityInstance.h"
 #include "RoomInstance.generated.h"
 
@@ -14,6 +15,9 @@ struct DUNGEONSYSTEM_API FRoomInstance
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	ETypeInfo Type;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Dungeon System")
 	FIntVector Position;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
@@ -25,10 +29,12 @@ struct DUNGEONSYSTEM_API FRoomInstance
 	FRoomInstance(const URoomTemplate* Template, FIntVector Position) :
 	Position(Position), TileMap(Template->TileMap)
 	{
+		Type = Template->Type;
+		
 		for (int i = 0; i < 2; ++i)
 		{
-			const auto Data = Template->SpawnableEntities[FMath::RandRange(0, Template->SpawnableEntities.Num() - 1)];
-			Entities.Add(FEntityInstance(Data, Data->Health, true));
+			const auto Data = Template->SpawnableEntities[i];
+			Entities.Add(FEntityInstance(Data.Entity, Data.Entity->Health, Data.Position , true));
 		}
 	}
 

@@ -4,6 +4,7 @@
 #include "Entities/Implementations/EnemyEntity.h"
 #include "Entities/Implementations/PlayerEntity.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Inventory/Inventory.h"
 #include "Kismet/GameplayStatics.h"
 
 void AEntityController::SetupInputComponent()
@@ -13,7 +14,11 @@ void AEntityController::SetupInputComponent()
 	InputComponent->BindAxis(TEXT("Horizontal"), this, &AEntityController::HorizontalMovement);
 	InputComponent->BindAxis(TEXT("Vertical"), this, &AEntityController::VerticalMovement);
 	
-	InputComponent->BindAction(TEXT("Damage"), IE_Pressed, this, &AEntityController::DealDamage);
+	InputComponent->BindAction(TEXT("Damage"), IE_Pressed, this, &AEntityController::DealDamage); //TODO Temporary
+	
+	InputComponent->BindAction(TEXT("InventoryUp"), IE_Pressed, this, &AEntityController::SetInventorySlotUp);
+	InputComponent->BindAction(TEXT("InventoryDown"), IE_Pressed, this, &AEntityController::SetInventorySlotDown); 
+	InputComponent->BindAction(TEXT("UseItem"), IE_Pressed, this, &AEntityController::UseItem); 
 }
 
 void AEntityController::HorizontalMovement(float Value)
@@ -25,6 +30,24 @@ void AEntityController::HorizontalMovement(float Value)
 void AEntityController::VerticalMovement(float Value)
 {
 	VerticalValue = Value;
+}
+
+void AEntityController::SetInventorySlotUp()
+{
+	const auto PlayerPawn = Cast<APlayerEntity>(GetPawn());
+	PlayerPawn->GetInventory()->ChangeSlot(-1);
+}
+
+void AEntityController::SetInventorySlotDown()
+{
+	const auto PlayerPawn = Cast<APlayerEntity>(GetPawn());
+	PlayerPawn->GetInventory()->ChangeSlot(1);
+}
+
+void AEntityController::UseItem()
+{
+	const auto PlayerPawn = Cast<APlayerEntity>(GetPawn());
+	PlayerPawn->GetInventory()->UseItem();
 }
 
 void AEntityController::DealDamage()
@@ -39,9 +62,11 @@ void AEntityController::DealDamage()
 }
 
 
+
 AEntityController::AEntityController()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	bShowMouseCursor = true;
 }
 
 void AEntityController::BeginPlay()

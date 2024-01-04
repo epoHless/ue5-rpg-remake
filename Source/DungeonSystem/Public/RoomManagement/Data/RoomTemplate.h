@@ -1,8 +1,16 @@
 ﻿#pragma once
 
 #include "PaperTileMap.h"
-#include "EntitySystem/Public/Data/EntityDataAsset.h"
+#include "SpawnInfo.h"
 #include "RoomTemplate.generated.h"
+
+UENUM(BlueprintType)
+enum class ETypeInfo : uint8
+{
+	ENEMY = 0			UMETA(DisplayName = "Enemy"),
+	INTERACTABLE = 1	UMETA(DisplayName = "Interactable"),
+	BOSS = 2			UMETA(DisplayName = "Boss"),
+};
 
 UCLASS(Blueprintable, BlueprintType)
 class DUNGEONSYSTEM_API URoomTemplate : public UDataAsset
@@ -14,8 +22,11 @@ public:
 	float Probability;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	ETypeInfo Type;
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	UPaperTileMap* TileMap;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	TArray<UEntityDataAsset*> SpawnableEntities;
+	TArray<FSpawnInfo> SpawnableEntities;
 };

@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "Entities/Implementations/EnemyEntity.h"
 #include "GameFramework/Actor.h"
+#include "Inventory/Items/Item.h"
+#include "Inventory/Pickables/PickableActor.h"
 #include "RoomManagement/Data/RoomInstance.h"
 #include "EntityManager.generated.h"
 
@@ -15,22 +17,31 @@ public:
 	AEntityManager();
 
 	UFUNCTION(BlueprintPure, Category = "RPG|Dungeon")
-	AEntity* Get();
+	AEntity* Get(ETypeInfo Type);
 
 	UFUNCTION()
-	void InitSystem(FRoomInstance& Room);
+	void InitSystem(FRoomInstance Room);
 
 protected:
 	
 	UFUNCTION()
-	void ToggleEnemies(FRoomInstance& Room);
+	void ToggleEnemies(FRoomInstance Room);
 
+	UFUNCTION()
+	void DestroyItem(APickableActor* Pickable);
+	void SpawnItem(const AEntity* Entity);
 	UFUNCTION()
 	void DisableEntity(AEntity* Entity);
 
 	virtual void BeginPlay() override;
 
 private:
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
+	TArray<UItem*> SpawnableItems;
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
+	TArray<APickableActor*> SpawnedItems;
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon")
 	TArray<AEntity*> Entities;
