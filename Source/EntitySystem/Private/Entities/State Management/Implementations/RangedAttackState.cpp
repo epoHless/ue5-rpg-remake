@@ -9,6 +9,9 @@ void URangedAttackState::Attack_Implementation(AEntity* Entity, AGameModeBase* G
 	const FVector SpawnLocation = Entity->GetActorLocation();
 	const FVector Direction = (PlayerPawn->GetActorLocation() - SpawnLocation).GetSafeNormal();
 
-	const auto Projectile = GameMode->GetWorld()->SpawnActor<AProjectile>(SpawnLocation + (Direction * 20), Entity->GetActorRotation());
+	FActorSpawnParameters Parameters;
+	Parameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	
+	const auto Projectile = GameMode->GetWorld()->SpawnActor<AProjectile>(SpawnLocation + (Direction * 1), Entity->GetActorRotation(), Parameters);
 	Projectile->InitProjectile(Direction, ProjectileData);
 }

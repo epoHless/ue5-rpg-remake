@@ -20,7 +20,7 @@ AProjectile::AProjectile()
 
 	SpriteComponent->SetMobility(EComponentMobility::Stationary);
 	
-	SpriteComponent->SetCollisionProfileName(TEXT("OverlapAll"));
+	SpriteComponent->SetCollisionProfileName(TEXT("Projectile"));
 	SpriteComponent->SetGenerateOverlapEvents(true);
 }
 
