@@ -6,18 +6,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-void AEntity::TakeDamage_Implementation(float Damage)
+AEntity::AEntity()
 {
-	CurrentHealth -= Damage;
-
-	OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
-	UE_LOG(LogTemp, Display, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
-	
-	if(CurrentHealth <= 0)
-	{
-		OnDeath_Implementation();
-		OnDeath.Broadcast(this);
-	}
+	PrimaryActorTick.bCanEverTick = true;
+	SetupComponents();
 }
 
 void AEntity::SetupComponents()
@@ -30,26 +22,6 @@ void AEntity::SetupComponents()
 	GetCharacterMovement()->GravityScale = 0;
 }
 
-void AEntity::AddHP_Implementation(float HP)
-{
-	CurrentHealth += HP;
-	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
-
-	if(CurrentHealth > MaxHealth) CurrentHealth = MaxHealth; 
-}
-
-void AEntity::SetHealth_Implementation(float HP)
-{
-	CurrentHealth = HP;
-	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
-}
-
-AEntity::AEntity()
-{
-	PrimaryActorTick.bCanEverTick = true;
-	SetupComponents();
-}
-
 void AEntity::BeginPlay()
 {
 	Super::BeginPlay();
@@ -60,17 +32,18 @@ void AEntity::BeginPlay()
 
 void AEntity::SetupEntity(UEntityDataAsset* Data)
 {
+	EntityDataAsset = Data;
+
 	if(Data->FlipbookDataAsset != nullptr)
 	{
-		EntityDataAsset = Data;
-		
-		CurrentHealth = Data->Health;
 		SetFlipbook(Data->FlipbookDataAsset->IdleFlipbook);
 		ChangeState(Data->IdleState);
 	}
+
+	CurrentHealth = Data->Health;
 	
-	CurrentHealth = MaxHealth;
-	OnHealthChanged.Broadcast(1);
+	MaxHealth = Data->Health;
+	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
 
 	CurrentState->OnEnter(this);
 }
@@ -101,4 +74,32 @@ void AEntity::ToggleEntity(bool bValue)
 	SetActorEnableCollision(bValue);
 
 	GetMovementComponent()->Velocity = FVector::ZeroVector;
+}
+
+void AEntity::TakeDamage_Implementation(float Damage)
+{
+	CurrentHealth -= Damage;
+
+	OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
+	UE_LOG(LogTemp, Display, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
+	
+	if(CurrentHealth <= 0)
+	{
+		OnDeath_Implementation();
+		OnDeath.Broadcast(this);
+	}
+}
+
+void AEntity::AddHP_Implementation(float HP)
+{
+	CurrentHealth += HP;
+	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
+
+	if(CurrentHealth > MaxHealth) CurrentHealth = MaxHealth; 
+}
+
+void AEntity::SetHealth_Implementation(float HP)
+{
+	CurrentHealth = HP;
+	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
 }

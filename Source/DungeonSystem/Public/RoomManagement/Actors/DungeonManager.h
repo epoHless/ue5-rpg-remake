@@ -17,6 +17,9 @@ public:
 	ADungeonManager();
 
 private:
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	UPaperTileMap* BaseTileMap;
 	
 	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
 	APaperTileMapActor* TilemapActor;

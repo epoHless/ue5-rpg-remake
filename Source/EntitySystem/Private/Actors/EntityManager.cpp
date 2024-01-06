@@ -46,7 +46,7 @@ void AEntityManager::BeginPlay()
 	RoomSubsystem->OnDungeonInit.AddDynamic(this, &AEntityManager::InitSystem);
 }
 
-void AEntityManager::ToggleEnemies(FRoomInstance Room)
+void AEntityManager::ResetItems()
 {
 	for (int i = 0; i < SpawnedItems.Num(); ++i)
 	{
@@ -54,7 +54,10 @@ void AEntityManager::ToggleEnemies(FRoomInstance Room)
 	}
 
 	SpawnedItems.Empty();
-	
+}
+
+void AEntityManager::SaveCurrentRoomData()
+{
 	for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
 	{
 		CurrentRoom.Entities[i].CurrentHP = Entities[i]->GetHP();
@@ -63,25 +66,56 @@ void AEntityManager::ToggleEnemies(FRoomInstance Room)
 	}
 
 	Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this))->UpdateRoom(CurrentRoom);
-	
+}
+
+void AEntityManager::ToggleNewRoom(FRoomInstance Room)
+{
 	CurrentRoom = Room;
 	
 	for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
 	{
 		if(!CurrentRoom.Entities[i].bActive || CurrentRoom.Entities[i].CurrentHP <= 0) continue;
 		
-		const auto Entity = Get(Room.Type);
+		const auto Entity = Get(CurrentRoom.Type);
 		
 		if(Entity != nullptr)
 		{
 			Entity->SetupEntity(CurrentRoom.Entities[i].Data);
+			Entity->ToggleEntity(true);
 			Entity->SetHealth_Implementation(CurrentRoom.Entities[i].CurrentHP);
 			Entity->SetActorLocation(CurrentRoom.Entities[i].Position);
-			Entity->ToggleEntity(true);
-
-			UE_LOG(LogTemp, Display, TEXT("Loaded Entity with %f HPs"), Entity->GetHP());
 		}
 	}
+}
+
+void AEntityManager::ToggleEnemies(FRoomInstance Room)
+{
+	ResetItems();
+	SaveCurrentRoomData();
+	ToggleNewRoom(Room);
+}
+
+void AEntityManager::DisableEntity(AEntity* Entity)
+{
+	if(!Entity) return;
+	
+	const auto Instance = CurrentRoom.Entities.FindByPredicate([&Entity](const FEntityInstance& Element)
+	{
+		return Entity->EntityDataAsset == Element.Data;
+	});
+
+	if(!Instance) return;
+	
+	Instance->bActive = false;
+	Instance->CurrentHP = 0;
+
+	SpawnItem(Entity);
+	
+	Entity->ToggleEntity(false);
+	Entity->SetActorLocation(GetActorLocation());
+
+	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
+	RoomSubsystem->OnEntityKilled.Broadcast(Entity->EntityDataAsset->ExperienceToGive);
 }
 
 void AEntityManager::DestroyItem(APickableActor* Pickable)
@@ -112,23 +146,4 @@ void AEntityManager::SpawnItem(const AEntity* Entity)
 		
 		SpawnedItems.Add(PickableActor);
 	}
-}
-
-void AEntityManager::DisableEntity(AEntity* Entity)
-{	
-	const auto Instance = CurrentRoom.Entities.FindByPredicate([&Entity](const FEntityInstance& Element)
-	{
-		return Entity->EntityDataAsset == Element.Data;
-	});
-	
-	Instance->bActive = false;
-	Instance->CurrentHP = 0;
-
-	SpawnItem(Entity);
-	
-	Entity->ToggleEntity(false);
-	Entity->SetActorLocation(GetActorLocation());
-
-	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
-	RoomSubsystem->OnEntityKilled.Broadcast(Entity->EntityDataAsset->ExperienceToGive);
 }

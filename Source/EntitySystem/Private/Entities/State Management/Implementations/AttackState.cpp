@@ -32,7 +32,7 @@ void UAttackState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameM
 	}
 }
 
-void UAttackState::Attack(AEntity* Entity, AGameModeBase* GameMode)
+void UAttackState::Attack_Implementation(AEntity* Entity, AGameModeBase* GameMode)
 {
 	FVector TraceStart = Entity->GetActorLocation();
 	FVector TraceDirection = (PlayerPawn->GetActorLocation() - TraceStart).GetSafeNormal();

@@ -6,6 +6,7 @@
 #include "Inventory/Inventory.h"
 #include "Inventory/Pickables/Pickable.h"
 #include "Kismet/GameplayStatics.h"
+#include "RoomManagement/DungeonGameMode.h"
 
 void APlayerEntity::TakeDamage_Implementation(float Damage)
 {
@@ -90,6 +91,13 @@ void APlayerEntity::BeginPlay()
 	
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
 	RoomSubsystem->OnLevelUp.AddDynamic(this, &APlayerEntity::OnLevelUp);
+
+	const auto GameMode = Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this));
+
+	if(GameMode)
+	{
+		Inventory->AddItem(GameMode->StartingItem);
+	}
 
 	CurrentShield = MaxShield;
 }

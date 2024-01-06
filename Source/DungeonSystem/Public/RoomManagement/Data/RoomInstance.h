@@ -40,7 +40,12 @@ struct DUNGEONSYSTEM_API FRoomInstance
 
 	bool IsCompleted()
 	{
-		return Entities[0].bActive && Entities[1].bActive;
+		for (int i = 0; i < Entities.Num(); ++i)
+		{
+			if(!Entities[i].bActive) return false;
+		}
+		
+		return true;
 	}
 
 	FRoomInstance() {}

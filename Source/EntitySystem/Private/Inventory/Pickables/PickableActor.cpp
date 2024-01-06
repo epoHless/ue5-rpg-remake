@@ -24,7 +24,7 @@ APickableActor::APickableActor()
 	SpriteComponent->SetCollisionProfileName(TEXT("OverlapAll"));
 	SpriteComponent->SetGenerateOverlapEvents(true);
 
-	SpriteComponent->SetRelativeRotation(FRotator(270,0,0));
+	SpriteComponent->SetRelativeRotation(FRotator(0,0,-90));
 }
 
 void APickableActor::SetupItem()

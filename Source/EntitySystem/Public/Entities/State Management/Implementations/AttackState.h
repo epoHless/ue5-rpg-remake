@@ -11,10 +11,11 @@ public:
 	virtual void OnEnter_Implementation(AEntity* Entity) override;
 	virtual void OnExit_Implementation(AEntity* Entity) override;
 	virtual void OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameMode) override;
-	
-	virtual void Attack(AEntity* Entity, AGameModeBase* GameMode);
 
-private:
+	UFUNCTION(BlueprintNativeEvent)
+	void Attack(AEntity* Entity, AGameModeBase* GameMode);
+
+protected:
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")

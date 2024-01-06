@@ -7,14 +7,12 @@
 #include "DungeonGameMode.generated.h"
 
 class APaperTileMapActor;
+class UItem;
 
 UCLASS(Blueprintable, BlueprintType)
 class DUNGEONSYSTEM_API ADungeonGameMode : public AGameModeBase
 {
-protected:
 
-
-private:
 	GENERATED_BODY()
 
 public:
@@ -36,6 +34,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Dungeon System")
 	int32 YSize = 10;
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	UItem* StartingItem;
 	
 private:
 
@@ -47,11 +48,14 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Dungeon System")
 	FRoomInstance CurrentRoom;
 	
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	UPROPERTY()
 	float TPLenght = 170;
-	
+
 	void InitDungeon();
 
+	UFUNCTION(BlueprintCallable, Category = "RPG|Dungeon System")
+	void StartGame();
+	
 	UFUNCTION()
 	void ChangeRoom(FIntVector Direction);
 };

@@ -34,6 +34,9 @@ protected:
 	void DisableEntity(AEntity* Entity);
 
 	virtual void BeginPlay() override;
+	void ResetItems();
+	void SaveCurrentRoomData();
+	void ToggleNewRoom(FRoomInstance Room);
 
 private:
 

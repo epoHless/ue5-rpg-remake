@@ -21,5 +21,5 @@ void ADungeonManager::BeginPlay()
 
 void ADungeonManager::ChangeTileset(FRoomInstance Room)
 {
-	TilemapActor->GetRenderComponent()->SetTileMap(Room.TileMap);
+	TilemapActor->GetRenderComponent()->SetTileMap(Room.TileMap ? Room.TileMap : BaseTileMap);
 }

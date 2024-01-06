@@ -2,6 +2,7 @@
 #include "Subsystems/RoomSubsystem.h"
 #include "Entities/Implementations/PlayerEntity.h"
 #include "FunctionLibraries/ExtensionLibrary.h"
+#include "Inventory/Inventory.h"
 #include "Kismet/GameplayStatics.h"
 #include "Managers/EntityController.h"
 
@@ -13,7 +14,6 @@ void ADungeonGameMode::Cleanup()
 	delete[] Rooms;
 }
 
-
 ADungeonGameMode::ADungeonGameMode()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -22,17 +22,15 @@ ADungeonGameMode::ADungeonGameMode()
 	PlayerControllerClass = AEntityController::StaticClass();
 }
 
-void ADungeonGameMode::BeginPlay()
+void ADungeonGameMode::StartGame()
 {
+	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(this);
+	RoomSubsystem->OnBoundHit.AddDynamic(this, &ADungeonGameMode::ChangeRoom);
+
 	Rooms = new FRoomInstance*[XSize];
 	for (int i = 0; i < XSize; ++i) {
 		Rooms[i] = new FRoomInstance[YSize];
 	}
-	
-	Super::BeginPlay();
-
-	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(this);
-	RoomSubsystem->OnBoundHit.AddDynamic(this, &ADungeonGameMode::ChangeRoom);
 	
 	InitDungeon();
 
@@ -42,12 +40,23 @@ void ADungeonGameMode::BeginPlay()
 	RoomSubsystem->OnDungeonInit.Broadcast(CurrentRoom);
 }
 
+void ADungeonGameMode::BeginPlay()
+{	
+	Super::BeginPlay();
+}
+
 void ADungeonGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("Entity 2: %f"), CurrentRoom.Entities[1].CurrentHP));
-	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("Entity 1: %f"), CurrentRoom.Entities[0].CurrentHP));
+	if(CurrentRoom.Entities.Num() > 0)
+	{
+		for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("Entity %i: %f"), i, CurrentRoom.Entities[i].CurrentHP));
+		}
+	}
+
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("X: %d | Y: %d"), CurrentRoom.Position.X, CurrentRoom.Position.Y));
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, TEXT("Room Values"));
 }
@@ -93,4 +102,6 @@ void ADungeonGameMode::ChangeRoom(FIntVector Direction)
 
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(this);
 	RoomSubsystem->OnRoomChanged.Broadcast(CurrentRoom);
+
+	UE_LOG(LogTemp, Warning, TEXT("Room X: %i Y: %i"), CurrentRoom.Position.X, CurrentRoom.Position.Y);
 }
