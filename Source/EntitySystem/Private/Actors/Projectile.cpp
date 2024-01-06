@@ -29,7 +29,7 @@ void AProjectile::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 {
 	if (OtherActor->GetClass()->ImplementsInterface(UDamageable::StaticClass()))
 	{
-		IDamageable::Execute_TakeDamage(OtherActor, ProjectileData->Damage);
+		IDamageable::Execute_TakeDamage(OtherActor, ProjectileData->Damage, nullptr);
 	}
 
 	Destroy();

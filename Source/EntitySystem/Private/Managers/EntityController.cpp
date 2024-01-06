@@ -57,11 +57,9 @@ void AEntityController::DealDamage()
 
 	for (const auto Enemy : Enemies)
 	{
-		IDamageable::Execute_TakeDamage(Enemy, 10);
+		IDamageable::Execute_TakeDamage(Enemy, 10, nullptr);
 	}
 }
-
-
 
 AEntityController::AEntityController()
 {

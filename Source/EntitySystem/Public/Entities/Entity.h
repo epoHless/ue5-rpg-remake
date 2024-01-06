@@ -8,6 +8,7 @@
 
 #include "Entity.generated.h"
 
+class UStatusComponent;
 class UEntityDataAsset;
 class UBaseState;
 class UPaperFlipbook;
@@ -19,13 +20,16 @@ UCLASS(Abstract, Blueprintable, BlueprintType)
 class ENTITYSYSTEM_API AEntity : public APaperCharacter, public IDamageable
 {
 public:
-	virtual void SetHealth_Implementation(float HP) override;
-
 	AEntity();
 	
+	UFUNCTION(BlueprintCallable)
+	virtual void SetHealth_Implementation(float HP) override;
+
+	UFUNCTION(BlueprintCallable)
 	virtual void AddHP_Implementation(float HP) override;
 
-	virtual void TakeDamage_Implementation(float Damage) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void TakeDamage_Implementation(float Damage, UStatusEffect* Effect) override;
 
 	FORCEINLINE virtual float GetHP() const override { return CurrentHealth; }
 
@@ -52,6 +56,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetupEntity(UEntityDataAsset* Data);
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UStatusComponent* GetStatusComponent() const { return StatusComponent; }
 	
 	virtual void Tick(float DeltaTime) override;
 
@@ -59,6 +66,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	void SetupComponents();
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "RPG|Entity|Status")
+	UStatusComponent* StatusComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "RPG|Entity")
 	UBaseState* CurrentState;

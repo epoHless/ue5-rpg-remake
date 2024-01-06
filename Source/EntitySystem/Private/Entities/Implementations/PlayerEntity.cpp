@@ -6,16 +6,27 @@
 #include "Inventory/Inventory.h"
 #include "Inventory/Pickables/Pickable.h"
 #include "Kismet/GameplayStatics.h"
+#include "Entities/Status System/StatusComponent.h"
 #include "RoomManagement/DungeonGameMode.h"
 
-void APlayerEntity::TakeDamage_Implementation(float Damage)
+void APlayerEntity::TakeDamage_Implementation(float Damage, UStatusEffect* Effect)
 {
 	if(CurrentShield <= 0)
 	{
-		Super::TakeDamage_Implementation(Damage);
+		Super::TakeDamage_Implementation(Damage, Effect);
 	}
 	
 	float LeftOverDamage = 0;
+
+	if(Effect)
+	{
+		const float Rand = FMath::RandRange(0.0f, 1.0f);
+
+		if (Rand <= Effect->Probability)
+		{
+			GetStatusComponent()->AddStatus(Effect);
+		}
+	}
 	
 	if(CurrentShield > 0)
 	{
@@ -91,13 +102,6 @@ void APlayerEntity::BeginPlay()
 	
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
 	RoomSubsystem->OnLevelUp.AddDynamic(this, &APlayerEntity::OnLevelUp);
-
-	const auto GameMode = Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this));
-
-	if(GameMode)
-	{
-		Inventory->AddItem(GameMode->StartingItem);
-	}
 
 	CurrentShield = MaxShield;
 }

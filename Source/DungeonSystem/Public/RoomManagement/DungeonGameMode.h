@@ -35,7 +35,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Dungeon System")
 	int32 YSize = 10;
 
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Dungeon System")
 	UItem* StartingItem;
 	
 private:

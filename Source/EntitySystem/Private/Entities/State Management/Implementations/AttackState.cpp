@@ -2,6 +2,7 @@
 
 #include "Entities/Entity.h"
 #include "Entities/Implementations/EnemyEntity.h"
+#include "Entities/Status System/StatusComponent.h"
 #include "GameFramework/GameModeBase.h"
 
 void UAttackState::OnEnter_Implementation(AEntity* Entity)
@@ -27,6 +28,7 @@ void UAttackState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameM
 		if(CurrentTime >= AttackRate)
 		{
 			Attack(Entity, GameMode);
+			
 			CurrentTime = 0;
 		}
 	}
@@ -44,7 +46,7 @@ void UAttackState::Attack_Implementation(AEntity* Entity, AGameModeBase* GameMod
 	{
 		if(Result.GetActor()->GetClass()->ImplementsInterface(UDamageable::StaticClass()))
 		{
-			IDamageable::Execute_TakeDamage(Result.GetActor(), Damage);
+			IDamageable::Execute_TakeDamage(Result.GetActor(), Damage, Effect.GetDefaultObject());
 
 			Cast<ACharacter>(Result.GetActor())->LaunchCharacter(TraceDirection * 20, false, false);
 			

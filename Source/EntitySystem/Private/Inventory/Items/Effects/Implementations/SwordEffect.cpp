@@ -13,7 +13,7 @@ void USwordEffect::Execute_Implementation(AGameModeBase* GameMode, APlayerEntity
 		{
 			if(Result.GetActor()->GetClass()->ImplementsInterface(UDamageable::StaticClass()))
 			{
-				IDamageable::Execute_TakeDamage(Result.GetActor(), 30);
+				IDamageable::Execute_TakeDamage(Result.GetActor(), 30, nullptr);
 			}
 		}
 	}

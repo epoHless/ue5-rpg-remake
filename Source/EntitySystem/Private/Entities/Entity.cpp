@@ -3,12 +3,17 @@
 #include "PaperFlipbookComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Entities/State Management/BaseState.h"
+#include "Entities/Status System/StatusComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AEntity::AEntity()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	StatusComponent = CreateDefaultSubobject<UStatusComponent>(TEXT("Status Component"));
+	StatusComponent->RegisterComponent();
+	
 	SetupComponents();
 }
 
@@ -76,12 +81,22 @@ void AEntity::ToggleEntity(bool bValue)
 	GetMovementComponent()->Velocity = FVector::ZeroVector;
 }
 
-void AEntity::TakeDamage_Implementation(float Damage)
+void AEntity::TakeDamage_Implementation(float Damage, UStatusEffect* Effect)
 {
 	CurrentHealth -= Damage;
 
 	OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
 	UE_LOG(LogTemp, Display, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
+
+	if(Effect)
+	{
+		const float Rand = FMath::RandRange(0.0f, 1.0f);
+
+		if (Rand <= Effect->Probability)
+		{
+			GetStatusComponent()->AddStatus(Effect);
+		}
+	}
 	
 	if(CurrentHealth <= 0)
 	{

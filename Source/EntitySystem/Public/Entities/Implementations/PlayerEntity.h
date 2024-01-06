@@ -11,7 +11,7 @@ UCLASS()
 class ENTITYSYSTEM_API APlayerEntity : public AEntity
 {
 public:
-	virtual void TakeDamage_Implementation(float Damage) override;
+	virtual void TakeDamage_Implementation(float Damage, UStatusEffect* Effect) override;
 
 private:
 	GENERATED_BODY()

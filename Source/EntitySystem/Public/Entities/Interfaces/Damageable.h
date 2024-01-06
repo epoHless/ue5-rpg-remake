@@ -4,6 +4,8 @@
 #include "UObject/Interface.h"
 #include "Damageable.generated.h"
 
+class UStatusEffect;
+
 UINTERFACE()
 class UDamageable : public UInterface
 {
@@ -22,7 +24,7 @@ public:
 	void AddHP(float HP);
 	
 	UFUNCTION(BlueprintNativeEvent)
-	void TakeDamage(float Damage);
+	void TakeDamage(float Damage, UStatusEffect* Effect);
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnDeath();

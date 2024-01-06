@@ -4,6 +4,8 @@
 #include "Entities/State Management/BaseState.h"
 #include "AttackState.generated.h"
 
+class UStatusEffect;
+
 UCLASS()
 class ENTITYSYSTEM_API UAttackState : public UBaseState
 {
@@ -17,6 +19,9 @@ public:
 
 protected:
 	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
+	TSubclassOf<UStatusEffect> Effect;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
 	float Damage;
