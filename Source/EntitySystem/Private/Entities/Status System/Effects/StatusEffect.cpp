@@ -7,7 +7,7 @@ void UStatusEffect::OnCycleComplete_Implementation(AEntity* Entity)
 {
 }
 
-void UStatusEffect::Tick(float& DeltaTime, AEntity* Entity)
+void UStatusEffect::Tick(const float& DeltaTime, AEntity* Entity)
 {
 	CurrentTime += DeltaTime;
 
@@ -23,4 +23,14 @@ void UStatusEffect::Tick(float& DeltaTime, AEntity* Entity)
 			Entity->GetStatusComponent()->RemoveStatus(this);
 		}
 	}
+}
+
+void UStatusEffect::OnAdded_Implementation(AEntity* Entity)
+{
+	CurrentTime = 0;
+	CurrentCycles = 0;
+}
+
+void UStatusEffect::OnRemoved_Implementation(AEntity* Entity)
+{
 }

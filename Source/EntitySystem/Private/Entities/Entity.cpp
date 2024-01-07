@@ -42,7 +42,6 @@ void AEntity::SetupEntity(UEntityDataAsset* Data)
 	if(Data->FlipbookDataAsset != nullptr)
 	{
 		SetFlipbook(Data->FlipbookDataAsset->IdleFlipbook);
-		ChangeState(Data->IdleState);
 	}
 
 	CurrentHealth = Data->Health;
@@ -50,7 +49,7 @@ void AEntity::SetupEntity(UEntityDataAsset* Data)
 	MaxHealth = Data->Health;
 	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
 
-	CurrentState->OnEnter(this);
+	ChangeState(Data->IdleState);
 }
 
 void AEntity::Tick(float DeltaTime)

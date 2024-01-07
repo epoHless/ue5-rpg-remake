@@ -29,9 +29,10 @@ void UStatusComponent::AddStatus(UStatusEffect* Effect)
 {
 	if(!ActiveStatuses.Contains(Effect))
 	{
-		Effect->OnAdded();
 		ActiveStatuses.Add(Effect);
 		OnStatusAdded.Broadcast(Effect);
+		
+		Effect->OnAdded(Owner);
 	}
 }
 
@@ -41,5 +42,7 @@ void UStatusComponent::RemoveStatus(UStatusEffect* Effect)
 	{
 		OnStatusRemoved.Broadcast(Effect);
 		ActiveStatuses.Remove(Effect);
+
+		Effect->OnRemoved(Owner);
 	}
 }

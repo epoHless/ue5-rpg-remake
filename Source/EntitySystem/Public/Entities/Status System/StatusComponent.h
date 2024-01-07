@@ -37,6 +37,5 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AddStatus(UStatusEffect* Effect);
-	
 	void RemoveStatus(UStatusEffect* Effect);
 };

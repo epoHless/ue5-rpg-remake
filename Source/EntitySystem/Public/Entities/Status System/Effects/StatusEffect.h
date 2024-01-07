@@ -30,14 +30,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UPaperSprite* Icon;
 
-	void Tick(float& DeltaTime, AEntity* Entity);
-
-	void OnAdded()
-	{
-		CurrentTime = 0;
-		CurrentCycles = 0;
-	}
+	void Tick(const float& DeltaTime, AEntity* Entity);
 
 	UFUNCTION(BlueprintNativeEvent)
 	void OnCycleComplete(AEntity* Entity);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnAdded(AEntity* Entity);
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void OnRemoved(AEntity* Entity);
 };

@@ -28,7 +28,6 @@ void UAttackState::OnUpdate_Implementation(AEntity* Entity, AGameModeBase* GameM
 		if(CurrentTime >= AttackRate)
 		{
 			Attack(Entity, GameMode);
-			
 			CurrentTime = 0;
 		}
 	}
@@ -49,8 +48,7 @@ void UAttackState::Attack_Implementation(AEntity* Entity, AGameModeBase* GameMod
 			IDamageable::Execute_TakeDamage(Result.GetActor(), Damage, Effect.GetDefaultObject());
 
 			Cast<ACharacter>(Result.GetActor())->LaunchCharacter(TraceDirection * 20, false, false);
-			
-			UE_LOG(LogTemp, Display, TEXT("Attacking!"));
+			Entity->LaunchCharacter(TraceDirection * 20, false, false);
 		}
 	}
 }

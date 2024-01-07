@@ -2,7 +2,6 @@
 #include "Subsystems/RoomSubsystem.h"
 #include "Entities/Implementations/PlayerEntity.h"
 #include "FunctionLibraries/ExtensionLibrary.h"
-#include "Inventory/Inventory.h"
 #include "Kismet/GameplayStatics.h"
 #include "Managers/EntityController.h"
 
@@ -16,7 +15,7 @@ void ADungeonGameMode::Cleanup()
 
 ADungeonGameMode::ADungeonGameMode()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	DefaultPawnClass = APlayerEntity::StaticClass();
 	PlayerControllerClass = AEntityController::StaticClass();
@@ -43,22 +42,6 @@ void ADungeonGameMode::StartGame()
 void ADungeonGameMode::BeginPlay()
 {	
 	Super::BeginPlay();
-}
-
-void ADungeonGameMode::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if(CurrentRoom.Entities.Num() > 0)
-	{
-		for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("Entity %i: %f"), i, CurrentRoom.Entities[i].CurrentHP));
-		}
-	}
-
-	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, FString::Printf(TEXT("X: %d | Y: %d"), CurrentRoom.Position.X, CurrentRoom.Position.Y));
-	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Blue, TEXT("Room Values"));
 }
 
 void ADungeonGameMode::UpdateRoom(const FRoomInstance& RoomInstance)

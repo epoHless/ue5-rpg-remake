@@ -42,7 +42,6 @@ void APlayerEntity::TakeDamage_Implementation(float Damage, UStatusEffect* Effec
 		CurrentHealth -= LeftOverDamage;
 		
 		OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
-		UE_LOG(LogTemp, Display, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
 	
 		if(CurrentHealth <= 0)
 		{
