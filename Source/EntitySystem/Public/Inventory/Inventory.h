@@ -42,6 +42,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "RPG|Inventory")
 	void UseItem();
+
+	UFUNCTION(BlueprintPure, Category = "RPG|Inventory")
+	UItem* GetCurrentItem();
 	
 	void ChangeSlot(int Value);
 

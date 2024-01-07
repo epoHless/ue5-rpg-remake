@@ -67,6 +67,11 @@ void UInventory::UseItem()
 	}
 }
 
+UItem* UInventory::GetCurrentItem()
+{
+	return CurrentSlot->Item;
+}
+
 void UInventory::ChangeSlot(int Value)
 {
 	auto Index = InventorySlots.IndexOfByKey(CurrentSlot);
