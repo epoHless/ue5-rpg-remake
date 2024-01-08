@@ -31,22 +31,14 @@ struct DUNGEONSYSTEM_API FRoomInstance
 	{
 		Type = Template->Type;
 		
-		for (int i = 0; i < 2; ++i)
+		for (int i = 0; i < Template->SpawnableEntities.Num(); ++i)
 		{
 			const auto Data = Template->SpawnableEntities[i];
 			Entities.Add(FEntityInstance(Data.Entity, Data.Entity->Health, Data.Position , true));
 		}
 	}
 
-	bool IsCompleted()
-	{
-		for (int i = 0; i < Entities.Num(); ++i)
-		{
-			if(!Entities[i].bActive) return false;
-		}
-		
-		return true;
-	}
+	bool IsCompleted();
 
 	FRoomInstance() {}
 };

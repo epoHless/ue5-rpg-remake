@@ -3,8 +3,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "RoomManagement/Data/RoomInstance.h"
-#include "RoomManagement/Data/RoomTemplate.h"
 #include "DungeonGameMode.generated.h"
+
+class UDungeonData;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGameOverCallback, bool, Result);
 
 class APaperTileMapActor;
 class UItem;
@@ -25,22 +27,26 @@ protected:
 
 public:
 
+	UPROPERTY(BlueprintAssignable)
+	FGameOverCallback OnGameOver;
+
 	UFUNCTION()
 	void UpdateRoom(const FRoomInstance& RoomInstance);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Dungeon System")
-	int32 XSize = 10;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RPG|Dungeon System")
-	int32 YSize = 10;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Dungeon System")
 	UItem* StartingItem;
+
+	UFUNCTION(BlueprintCallable, Category = "RPG|Dungeon System")
+	void SetDungeonData(UDungeonData* Data);
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Dungeon System")
+	UDungeonData* DungeonData;
 	
 private:
 
-	UPROPERTY(EditAnywhere, Category = "RPG|Dungeon System")
-	TArray<URoomTemplate*> Templates;
+	virtual void Tick(float DeltaSeconds) override;
+	void CalculateTotalWeight(float TotalSum, float& Random);
+	URoomTemplate* ChoseRoom();
 
 	FRoomInstance** Rooms;
 
@@ -57,4 +63,7 @@ private:
 	
 	UFUNCTION()
 	void ChangeRoom(FIntVector Direction);
+
+	UFUNCTION()
+	void IsGameOver(float Quantity);
 };

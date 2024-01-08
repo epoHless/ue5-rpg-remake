@@ -15,7 +15,7 @@ AEntity* AEntityManager::Get(ETypeInfo Type)
 {
 	for (const auto Entity : Entities)
 	{
-		if(!Entity->bEnabled && Entity->EntityDataAsset->Type == Type) return Entity;
+		if(!Entity->bEnabled) return Entity;
 	}
 
 	return nullptr;
@@ -97,22 +97,26 @@ void AEntityManager::ToggleEnemies(FRoomInstance Room)
 
 void AEntityManager::DisableEntity(AEntity* Entity)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Disabling %s Entity with %f HPs"), *GetName(), Entity->GetHP());
+
 	if(!Entity) return;
 	
 	const auto Instance = CurrentRoom.Entities.FindByPredicate([&Entity](const FEntityInstance& Element)
 	{
-		return Entity->EntityDataAsset == Element.Data;
+		return Entity->bEnabled && Entity->EntityDataAsset == Element.Data;
 	});
 
-	if(!Instance) return;
+	if(!Instance || !Instance->bActive) return;
 	
 	Instance->bActive = false;
-	Instance->CurrentHP = 0;
+	// Instance->CurrentHP = 0;
 
 	SpawnItem(Entity);
 	
 	Entity->ToggleEntity(false);
 	Entity->SetActorLocation(GetActorLocation());
+
+	UE_LOG(LogTemp, Warning, TEXT("Disabled %s Entity with %f HPs"), *GetName(), Entity->GetHP());
 
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
 	RoomSubsystem->OnEntityKilled.Broadcast(Entity->EntityDataAsset->ExperienceToGive);

@@ -84,8 +84,10 @@ void AEntity::TakeDamage_Implementation(float Damage, UStatusEffect* Effect)
 {
 	CurrentHealth -= Damage;
 
-	OnHealthChanged.Broadcast(CurrentHealth/EntityDataAsset->Health);
-	UE_LOG(LogTemp, Display, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
+	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
+	
+	UE_LOG(LogTemp, Warning, TEXT("%s Entity with %f HPs"), *GetName(), CurrentHealth);
+	UE_LOG(LogTemp, Warning, TEXT("Percentage %f HPs"), CurrentHealth/MaxHealth);
 
 	if(Effect)
 	{
