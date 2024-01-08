@@ -5,7 +5,7 @@
 
 void USwordEffect::Execute_Implementation(AGameModeBase* GameMode, APlayerEntity* User)
 {
-	const auto Results = UExtensionLibrary::SphereTraceByMousePosition(GameMode, User, 10, 20);
+	const auto Results = UExtensionLibrary::SphereTraceByMousePosition(GameMode, User, 10, 30);
 	
 	if(Results.Num() > 0)
 	{

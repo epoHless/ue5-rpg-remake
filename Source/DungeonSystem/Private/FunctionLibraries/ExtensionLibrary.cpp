@@ -60,7 +60,7 @@ TArray<FHitResult> UExtensionLibrary::SphereTraceByMousePosition(const AGameMode
 	TArray<FHitResult> Results;
 	
 	UKismetSystemLibrary::SphereTraceMulti(GameMode->GetWorld(), IgnoredActor->GetActorLocation(), FVector(EndLocation.X, EndLocation.Y, 0), Radius, UEngineTypes::ConvertToTraceType(ECC_Camera), false,
-		Ignored, EDrawDebugTrace::ForDuration, Results, true);
+		Ignored, EDrawDebugTrace::None, Results, true);
 
 	return Results;
 }

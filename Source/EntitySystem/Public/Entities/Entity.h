@@ -37,6 +37,9 @@ public:
 	FHealthCallback OnHealthChanged;
 
 	UPROPERTY(BlueprintAssignable)
+	FHealthCallback OnDamageTaken;
+
+	UPROPERTY(BlueprintAssignable)
 	FDeathCallback OnDeath;
 
 	UPROPERTY(EditAnywhere, Category = "RPG|Entity")
