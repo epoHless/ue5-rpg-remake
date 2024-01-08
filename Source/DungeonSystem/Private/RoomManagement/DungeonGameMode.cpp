@@ -8,7 +8,7 @@
 
 void ADungeonGameMode::Cleanup()
 {
-	for (int i = 0; i < DungeonData->X * DungeonData->Y; ++i) {
+	for (int i = 0; i < DungeonData->X * DungeonData->Y; i++) {
 		delete[] Rooms[i];
 	}
 	delete[] Rooms;
@@ -27,7 +27,7 @@ void ADungeonGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(this);
-	RoomSubsystem->OnEntityKilled.AddDynamic(this, &ADungeonGameMode::IsGameOver);
+	RoomSubsystem->OnRoomCleared.AddDynamic(this, &ADungeonGameMode::IsGameOver);
 }
 
 void ADungeonGameMode::StartGame()
@@ -36,7 +36,9 @@ void ADungeonGameMode::StartGame()
 	RoomSubsystem->OnBoundHit.AddDynamic(this, &ADungeonGameMode::ChangeRoom);
 
 	Rooms = new FRoomInstance*[DungeonData->X];
-	for (int i = 0; i < DungeonData->X; ++i) {
+	
+	for (int i = 0; i < DungeonData->X; i++)
+	{
 		Rooms[i] = new FRoomInstance[DungeonData->Y];
 	}
 	
@@ -56,22 +58,6 @@ void ADungeonGameMode::UpdateRoom(const FRoomInstance& RoomInstance)
 void ADungeonGameMode::SetDungeonData(UDungeonData* Data)
 {
 	DungeonData = Data;
-}
-
-void ADungeonGameMode::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	if(CurrentRoom.Entities.Num() > 0)
-	{
-		for (int i = 0; i < CurrentRoom.Entities.Num(); ++i)
-		{
-			if(CurrentRoom.Entities[i].bActive) GEngine->AddOnScreenDebugMessage(-1, DeltaSeconds, FColor::Yellow, FString::Printf(TEXT("Entity %i: %f"), i, CurrentRoom.Entities[i].CurrentHP));
-		}
-	}
-
-	GEngine->AddOnScreenDebugMessage(-1, DeltaSeconds, FColor::Blue, FString::Printf(TEXT("X: %d | Y: %d"), CurrentRoom.Position.X, CurrentRoom.Position.Y));
-	GEngine->AddOnScreenDebugMessage(-1, DeltaSeconds, FColor::Blue, TEXT("Room Values"));
 }
 
 void ADungeonGameMode::CalculateTotalWeight(float TotalSum, float& Random)
@@ -103,6 +89,9 @@ URoomTemplate* ADungeonGameMode::ChoseRoom()
 void ADungeonGameMode::InitDungeon()
 {	
 	const int32 ActualSize = DungeonData->X * DungeonData->Y;
+
+	RoomsToClear = ActualSize - 1;
+	
 	FIntVector RoomPosition = FIntVector(0,0,0);
 
 	for (int i = 0; i < ActualSize; i++)
@@ -140,14 +129,12 @@ void ADungeonGameMode::ChangeRoom(FIntVector Direction)
 	UE_LOG(LogTemp, Warning, TEXT("Room X: %i Y: %i"), CurrentRoom.Position.X, CurrentRoom.Position.Y);
 }
 
-void ADungeonGameMode::IsGameOver(float Quantity)
+void ADungeonGameMode::IsGameOver(FRoomInstance Room)
 {
-	const int32 ActualSize = DungeonData->X * DungeonData->Y;
-	
-	for (int i = 1; i < ActualSize; ++i)
-	{
-		if(!Rooms[i]->IsCompleted()) return;
-	}
+	ClearedRooms++;
 
-	OnGameOver.Broadcast(true);
+	if (ClearedRooms >= RoomsToClear)
+	{
+		OnGameOver.Broadcast(true);
+	}
 }

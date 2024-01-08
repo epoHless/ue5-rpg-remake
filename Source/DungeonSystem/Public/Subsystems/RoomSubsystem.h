@@ -35,6 +35,9 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FDungeonCallback OnRoomChanged;
+	
+	UPROPERTY(BlueprintAssignable)
+	FDungeonCallback OnRoomCleared;
 
 	UPROPERTY(BlueprintAssignable)
 	FDungeonCallback OnUpdateRoomValues;

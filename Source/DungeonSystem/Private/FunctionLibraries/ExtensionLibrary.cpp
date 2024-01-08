@@ -28,30 +28,14 @@ bool UExtensionLibrary::LineTraceByMousePosition(const AGameModeBase* GameMode, 
 	return GameMode->GetWorld()->LineTraceSingleByChannel(OUT HitResult, TraceLocation + Direction * 300 , EndLocation, ECC_Camera); 
 }
 
-FVector UExtensionLibrary::GetDirectionFromActor(const AGameModeBase* GameMode, AActor* Actor)
+FVector2D UExtensionLibrary::GetMousePosition(const APlayerController* Controller, AActor* Actor)
 {
-	FHitResult HitResult;
-	
-	const auto* Controller = GameMode->GetWorld()->GetFirstPlayerController();
-	const auto CameraManager = Controller->PlayerCameraManager;
-	
 	float MouseX = 0;
 	float MouseY = 0;
 
 	Controller->GetMousePosition(MouseX, MouseY);
 
-	FVector TraceLocation;
-	FVector Direction = CameraManager->GetCameraRotation().Vector().GetSafeNormal();
-
-	Controller->DeprojectScreenPositionToWorld(MouseX, MouseY, TraceLocation, Direction);
-
-	const FVector EndLocation = TraceLocation + 10000 * Direction;
-	
-	if(GameMode->GetWorld()->LineTraceSingleByChannel(OUT HitResult, TraceLocation + Direction * 300 , EndLocation, ECC_Camera))
-	{
-		return  Actor->GetActorLocation() - HitResult.ImpactPoint;
-	}
-	else return FVector::ZeroVector;
+	return FVector2D(MouseX, MouseY);
 }
 
 TArray<FHitResult> UExtensionLibrary::SphereTraceByMousePosition(const AGameModeBase* GameMode, APlayerEntity* IgnoredActor,
@@ -59,33 +43,23 @@ TArray<FHitResult> UExtensionLibrary::SphereTraceByMousePosition(const AGameMode
 {
 	const auto* Controller = GameMode->GetWorld()->GetFirstPlayerController();
 	
-	float MouseX = 0;
-	float MouseY = 0;
-
-	Controller->GetMousePosition(MouseX, MouseY);
-
-	const FVector StartTrace = IgnoredActor->GetActorLocation();
-	FVector EndTrace = StartTrace;
+	FVector2D ScreenLocation;
+	Controller->ProjectWorldLocationToScreen(IgnoredActor->GetActorLocation(), ScreenLocation, true);
 	
-	FVector TraceLocation;
-	FVector Direction = GetDirectionFromActor(GameMode, IgnoredActor);
-
-	// Controller->DeprojectMousePositionToWorld(TraceLocation, Direction);
-
-	TraceLocation.Z = 15;
-	
+	FVector2D Direction = GetMousePosition(Controller, IgnoredActor) - ScreenLocation;
 	Direction.Normalize();
-	
-	UE_LOG(LogTemp, Warning, TEXT("X: %f, Y: %f, Z: %f"), Direction.X, Direction.Y, Direction.Z);
-	
-	EndTrace = StartTrace + (Direction + Range);
+
+	UE_LOG(LogTemp, Warning, TEXT("X: %f, Y: %f"), Direction.X, Direction.Y);
+	UE_LOG(LogTemp, Warning, TEXT("X: %f, Y: %f"), ScreenLocation.X, ScreenLocation.Y);
+
+	const FVector EndLocation = IgnoredActor->GetActorLocation() + (FVector(Direction.X, Direction.Y, 15) * Range);
 
 	TArray<AActor*> Ignored;
 	Ignored.Add(IgnoredActor);
 	
 	TArray<FHitResult> Results;
 	
-	UKismetSystemLibrary::SphereTraceMulti(GameMode->GetWorld(), IgnoredActor->GetActorLocation(), EndTrace, Radius, UEngineTypes::ConvertToTraceType(ECC_Camera), false,
+	UKismetSystemLibrary::SphereTraceMulti(GameMode->GetWorld(), IgnoredActor->GetActorLocation(), FVector(EndLocation.X, EndLocation.Y, 0), Radius, UEngineTypes::ConvertToTraceType(ECC_Camera), false,
 		Ignored, EDrawDebugTrace::ForDuration, Results, true);
 
 	return Results;

@@ -14,6 +14,8 @@ void AEntityController::SetupInputComponent()
 	InputComponent->BindAxis(TEXT("Horizontal"), this, &AEntityController::HorizontalMovement);
 	InputComponent->BindAxis(TEXT("Vertical"), this, &AEntityController::VerticalMovement);
 	
+	InputComponent->BindAxis(TEXT("Inventory"), this, &AEntityController::SetInventorySlot);
+	
 	InputComponent->BindAction(TEXT("Damage"), IE_Pressed, this, &AEntityController::DealDamage); //TODO Temporary
 	
 	InputComponent->BindAction(TEXT("InventoryUp"), IE_Pressed, this, &AEntityController::SetInventorySlotUp);
@@ -30,6 +32,13 @@ void AEntityController::HorizontalMovement(float Value)
 void AEntityController::VerticalMovement(float Value)
 {
 	VerticalValue = Value;
+}
+
+void AEntityController::SetInventorySlot(float X)
+{
+	if(X == 0) return;
+	const auto PlayerPawn = Cast<APlayerEntity>(GetPawn());
+	PlayerPawn->GetInventory()->ChangeSlot(X);
 }
 
 void AEntityController::SetInventorySlotUp()

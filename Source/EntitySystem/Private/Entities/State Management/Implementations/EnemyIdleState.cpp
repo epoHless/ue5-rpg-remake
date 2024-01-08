@@ -8,8 +8,6 @@
 void UEnemyIdleState::OnEnter_Implementation(AEntity* Entity)
 {
 	if(PlayerPawn == nullptr) PlayerPawn = Cast<AEnemyEntity>(Entity)->GetPawn();
-	Entity->GetMovementComponent()->Velocity = FVector::ZeroVector;
-
 	Super::OnEnter_Implementation(Entity);
 }
 

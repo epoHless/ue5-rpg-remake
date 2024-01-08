@@ -56,6 +56,7 @@ void AEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if(CurrentState != nullptr) CurrentState->OnUpdate(this, UGameplayStatics::GetGameMode(this));
+	GetSprite()->SetRelativeRotation(GetMovementComponent()->Velocity.X >= 0 ? FRotator(0,0,-90) : FRotator(180,0,-90));
 }
 
 void AEntity::SetFlipbook(UPaperFlipbook* Flipbook)

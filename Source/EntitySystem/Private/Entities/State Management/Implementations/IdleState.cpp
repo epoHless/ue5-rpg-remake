@@ -6,6 +6,7 @@
 void UIdleState::OnEnter_Implementation(AEntity* Entity)
 {
 	Entity->SetFlipbook(Entity->GetIdleFlipbook());
+	Entity->GetMovementComponent()->StopMovementImmediately();
 }
 
 void UIdleState::OnExit_Implementation(AEntity* Entity)

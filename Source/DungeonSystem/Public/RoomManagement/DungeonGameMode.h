@@ -41,10 +41,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "RPG|Dungeon System")
 	UDungeonData* DungeonData;
+
+	UFUNCTION(BlueprintPure, Category = "RPG|Dungeon System")
+	FORCEINLINE FRoomInstance& GetCurrentRoom() { return CurrentRoom; }
 	
 private:
-
-	virtual void Tick(float DeltaSeconds) override;
 	void CalculateTotalWeight(float TotalSum, float& Random);
 	URoomTemplate* ChoseRoom();
 
@@ -65,5 +66,8 @@ private:
 	void ChangeRoom(FIntVector Direction);
 
 	UFUNCTION()
-	void IsGameOver(float Quantity);
+	void IsGameOver(FRoomInstance Room);
+
+	int32 RoomsToClear;
+	int32 ClearedRooms = 0;
 };

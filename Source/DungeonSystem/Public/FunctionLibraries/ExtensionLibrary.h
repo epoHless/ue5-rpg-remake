@@ -14,7 +14,7 @@ class DUNGEONSYSTEM_API UExtensionLibrary : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintPure, Category = "Chimera|Input System")
 	static bool LineTraceByMousePosition(const AGameModeBase* GameMode, FVector StartTrace, FHitResult& HitResult);
-	static FVector GetDirectionFromActor(const AGameModeBase* GameMode, AActor* Actor);
+	static FVector2D GetMousePosition(const APlayerController* Controller, AActor* Actor);
 	static TArray<FHitResult> SphereTraceByMousePosition(const AGameModeBase* GameMode, APlayerEntity* IgnoredActor,
 	                                                     float Radius, float Range);
 

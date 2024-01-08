@@ -97,8 +97,6 @@ void AEntityManager::ToggleEnemies(FRoomInstance Room)
 
 void AEntityManager::DisableEntity(AEntity* Entity)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Disabling %s Entity with %f HPs"), *GetName(), Entity->GetHP());
-
 	if(!Entity) return;
 	
 	const auto Instance = CurrentRoom.Entities.FindByPredicate([&Entity](const FEntityInstance& Element)
@@ -109,16 +107,21 @@ void AEntityManager::DisableEntity(AEntity* Entity)
 	if(!Instance || !Instance->bActive) return;
 	
 	Instance->bActive = false;
-	// Instance->CurrentHP = 0;
 
 	SpawnItem(Entity);
 	
 	Entity->ToggleEntity(false);
 	Entity->SetActorLocation(GetActorLocation());
 
-	UE_LOG(LogTemp, Warning, TEXT("Disabled %s Entity with %f HPs"), *GetName(), Entity->GetHP());
-
 	const auto RoomSubsystem = UExtensionLibrary::GetSubsystemByGameMode<URoomSubsystem>(UGameplayStatics::GetGameMode(this));
+
+	if(CurrentRoom.IsCompleted())
+	{
+		RoomSubsystem->OnRoomCleared.Broadcast(CurrentRoom);
+	}
+
+	Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this))->UpdateRoom(CurrentRoom);
+
 	RoomSubsystem->OnEntityKilled.Broadcast(Entity->EntityDataAsset->ExperienceToGive);
 }
 

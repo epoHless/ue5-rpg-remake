@@ -32,9 +32,7 @@ void APlayerEntity::TakeDamage_Implementation(float Damage, UStatusEffect* Effec
 	{
 		CurrentShield -= Damage;
 		OnShieldChanged.Broadcast(CurrentShield/MaxShield);
-	}
-
-	if(CurrentShield < 0)
+	}else
 	{
 		LeftOverDamage = FMath::Abs(CurrentShield);
 		CurrentShield = 0;
@@ -46,6 +44,9 @@ void APlayerEntity::TakeDamage_Implementation(float Damage, UStatusEffect* Effec
 		if(CurrentHealth <= 0)
 		{
 			OnDeath_Implementation();
+
+			const auto GameMode = Cast<ADungeonGameMode>(UGameplayStatics::GetGameMode(this));
+			GameMode->OnGameOver.Broadcast(false);
 
 			OnDeath.Broadcast(this);
 		}
@@ -89,7 +90,8 @@ void APlayerEntity::OnPickupOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 void APlayerEntity::OnLevelUp(float Quantity)
 {
-	MaxHealth *= Quantity;
+	MaxHealth += 25;
+	Execute_SetHealth(this, MaxHealth);
 	OnHealthChanged.Broadcast(CurrentHealth/MaxHealth);
 }
 

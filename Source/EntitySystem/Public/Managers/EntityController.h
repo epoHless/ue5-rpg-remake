@@ -13,6 +13,7 @@ protected:
 	void HorizontalMovement(float Value);
 	void VerticalMovement(float Value);
 
+	void SetInventorySlot(float X);
 	void SetInventorySlotUp();
 	void SetInventorySlotDown();
 	void UseItem();
