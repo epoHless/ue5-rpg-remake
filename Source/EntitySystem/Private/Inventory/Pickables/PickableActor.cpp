@@ -1,7 +1,7 @@
 ﻿#include "Inventory/Pickables/PickableActor.h"
 
-#include "Inventory/Items/Item.h"
 #include "PaperSpriteComponent.h"
+#include "Inventory/Items/Item.h"
 #include "Entities/Implementations/PlayerEntity.h"
 #include "Inventory/Inventory.h"
 
@@ -17,7 +17,7 @@ APickableActor::APickableActor()
 
 	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Sprite Component"));
 	SpriteComponent->SetupAttachment(GetRootComponent());
-	SpriteComponent->RegisterComponent();
+	// SpriteComponent->RegisterComponent();
 	
 	SpriteComponent->SetMobility(EComponentMobility::Stationary);
 	

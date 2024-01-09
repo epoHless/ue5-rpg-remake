@@ -68,6 +68,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
 	void SetupComponents();
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "RPG|Entity|Status")

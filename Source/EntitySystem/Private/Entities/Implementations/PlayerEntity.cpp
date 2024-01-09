@@ -66,10 +66,10 @@ APlayerEntity::APlayerEntity()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory Component"));
-	Inventory->RegisterComponent();
+	// Inventory->RegisterComponent();
 
 	ExperienceComponent = CreateDefaultSubobject<UExperienceComponent>(TEXT("Experience Component"));
-	ExperienceComponent->RegisterComponent();
+	// ExperienceComponent->RegisterComponent();
 
 	const auto DataObjectFinder = ConstructorHelpers::FObjectFinder<UEntityDataAsset>(TEXT("/Script/EntitySystem.EntityDataAsset'/Game/Core/Data/Player/PlayerData.PlayerData'"));
 	EntityDataAsset = DataObjectFinder.Object;

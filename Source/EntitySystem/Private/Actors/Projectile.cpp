@@ -9,7 +9,7 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
-	MovementComponent->RegisterComponent();
+	// MovementComponent->RegisterComponent();
 
 	MovementComponent->ProjectileGravityScale = 0;
 	MovementComponent->InitialSpeed = 100;

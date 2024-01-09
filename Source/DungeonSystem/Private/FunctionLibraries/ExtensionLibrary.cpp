@@ -49,9 +49,6 @@ TArray<FHitResult> UExtensionLibrary::SphereTraceByMousePosition(const AGameMode
 	FVector2D Direction = GetMousePosition(Controller, IgnoredActor) - ScreenLocation;
 	Direction.Normalize();
 
-	UE_LOG(LogTemp, Warning, TEXT("X: %f, Y: %f"), Direction.X, Direction.Y);
-	UE_LOG(LogTemp, Warning, TEXT("X: %f, Y: %f"), ScreenLocation.X, ScreenLocation.Y);
-
 	const FVector EndLocation = IgnoredActor->GetActorLocation() + (FVector(Direction.X, Direction.Y, 15) * Range);
 
 	TArray<AActor*> Ignored;
